@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0b0d0e;
+  --color-coal: #15191b;
+  --color-lava: #1f2427;
+  --color-bone: #ece4d6;
+  --color-sand: #c9b48f;
+  --color-reef: #2fa59a;
+  --color-ember: #d9692e;
+  --font-display: var(--font-bebas), Impact, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-bone);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Kapa-inspired triangle texture (niho manō) */
+.bg-kapa {
+  background-image:
+    linear-gradient(135deg, transparent 75%, rgb(201 180 143 / 0.05) 75%),
+    linear-gradient(225deg, transparent 75%, rgb(201 180 143 / 0.05) 75%);
+  background-size: 28px 28px;
+}
+
+.logo-dark {
+  filter: invert(1);
+  mix-blend-mode: screen;
+}
+
+@keyframes drift {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-drift {
+  animation: drift 40s linear infinite;
+}
+
+.ocean-text[data-gl] {
+  color: transparent;
+}
+
+/* Shine sweep + sparkles */
+.shine-text {
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(110deg, var(--color-sand) 40%, #fff6e0 50%, var(--color-sand) 60%) 0 0 / 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shine 3.5s ease-in-out infinite;
+}
+
+.shine-text .sparkle {
+  position: absolute;
+  width: 0.18em;
+  height: 0.18em;
+  background: #fff6e0;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  opacity: 0;
+  pointer-events: none;
+  animation: sparkle 3.5s ease-in-out infinite;
+}
+
+@keyframes shine {
+  0%, 20% { background-position: 100% 0; }
+  70%, 100% { background-position: 0 0; }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(90deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-drift,
+  .shine-text,
+  .shine-text .sparkle {
+    animation: none;
+  }
+}

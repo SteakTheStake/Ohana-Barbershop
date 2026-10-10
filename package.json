@@ -1,0 +1,9 @@
+{
+  "name": "ohana-barbershop",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -C apps/web dev",
+    "build": "pnpm -C apps/web build",
+    "lint": "pnpm -C apps/web lint"
+  }
+}
