@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About | Ohana Barbershop</title>
+  <meta name="description" content="Locally owned. Fair prices. Aloha spirit in every cut." />
+  <meta property="og:title" content="About | Ohana Barbershop" />
+  <meta property="og:description" content="Locally owned. Fair prices. Aloha spirit in every cut." />
+  <meta property="og:site_name" content="Ohana Barbershop" />
+  <meta property="og:image" content="logo.webp" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .about-grid {
+      display: grid;
+      gap: 2.5rem;
+    }
+    @media (min-width: 768px) {
+      .about-grid {
+        grid-template-columns: 1fr auto;
+      }
+    }
+    .about-facts {
+      margin-top: 2rem;
+      border-top: 1px solid var(--color-lava);
+      border-bottom: 1px solid var(--color-lava);
+    }
+    .fact-row {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--color-lava);
+    }
+    .fact-row:last-child {
+      border-bottom: none;
+    }
+    .fact-label {
+      width: 5rem;
+      color: var(--color-reef);
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      letter-spacing: 0.1em;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo-link" aria-label="Ohana Barbershop">
+        <img src="logo.webp" alt="" class="logo-dark header-logo-img" />
+        <span class="font-display" style="font-size: 1.5rem; letter-spacing: 0.1em;">Ohana</span>
+      </a>
+      <nav class="nav-desktop">
+        <a href="services.html">Services</a>
+        <a href="about.html" style="color: var(--color-reef);">About</a>
+        <a href="shop.html">Shop</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <a href="book.html" class="btn-book btn-book-sm">Book Now</a>
+    </div>
+    <nav class="nav-mobile">
+      <a href="services.html">Services</a>
+      <a href="about.html" style="color: var(--color-reef);">About</a>
+      <a href="shop.html">Shop</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <svg aria-hidden="true" class="niho-divider text-lava" style="height: 0.5rem;" preserveAspectRatio="none" viewBox="0 0 160 16">
+      <defs>
+        <pattern id="niho-header" width="16" height="16" patternUnits="userSpaceOnUse">
+          <path d="M0 16 L8 2 L16 16 Z" fill="currentColor"></path>
+          <path d="M5 16 L8 10 L11 16 Z" fill="var(--color-ink)"></path>
+        </pattern>
+      </defs>
+      <rect width="160" height="16" fill="url(#niho-header)"></rect>
+    </svg>
+  </header>
+
+  <main>
+    <section class="container-narrow section-pt">
+      <div class="section-title">
+        <p class="section-kicker">Your Barber</p>
+        <h1 class="section-heading">Meet Spencer</h1>
+        <svg aria-hidden="true" class="niho-divider text-sand" style="width: 8rem; margin-top: 0.75rem;" preserveAspectRatio="none" viewBox="0 0 160 16">
+          <defs>
+            <pattern id="niho-about-title" width="16" height="16" patternUnits="userSpaceOnUse">
+              <path d="M0 16 L8 2 L16 16 Z" fill="currentColor"></path>
+              <path d="M5 16 L8 10 L11 16 Z" fill="var(--color-ink)"></path>
+            </pattern>
+          </defs>
+          <rect width="160" height="16" fill="url(#niho-about-title)"></rect>
+        </svg>
+      </div>
+
+      <div class="about-grid">
+        <div>
+          <p style="color: rgba(236, 228, 214, 0.8); max-width: 28rem; font-size: 1.125rem;">
+            Locally owned. Fair prices. Aloha spirit in every cut.
+          </p>
+
+          <dl class="about-facts">
+            <div class="fact-row">
+              <dt class="fact-label">From</dt>
+              <dd>Hauʻula, North Shore Oʻahu</dd>
+            </div>
+            <div class="fact-row">
+              <dt class="fact-label">Now</dt>
+              <dd>Albany, Oregon</dd>
+            </div>
+            <div class="fact-row">
+              <dt class="fact-label">Ohana</dt>
+              <dd>Annie, Kiaʻi, Edwina, Makaia</dd>
+            </div>
+          </dl>
+
+          <div style="margin-top: 2rem;">
+            <a href="book.html" class="btn-book">Book Now</a>
+          </div>
+        </div>
+
+        <div style="display: none;" class="about-flower-wrap">
+          <span aria-hidden="true" class="icon icon-flower" style="color: rgba(217, 105, 46, 0.4); width: 14rem; height: 14rem;"></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div aria-hidden="true" style="overflow: hidden; color: rgba(47, 165, 154, 0.5);">
+      <svg class="animate-drift" style="display: block; height: 2.5rem; width: 200%;" viewBox="0 0 1200 40" preserveAspectRatio="none">
+        <path d="M0 20 Q 37.5 0 75 20 T 150 20 T 225 20 T 300 20 T 375 20 T 450 20 T 525 20 T 600 20 T 675 20 T 750 20 T 825 20 T 900 20 T 975 20 T 1050 20 T 1125 20 T 1200 20" fill="none" stroke="currentColor" stroke-width="2"></path>
+        <path d="M0 30 Q 37.5 10 75 30 T 150 30 T 225 30 T 300 30 T 375 30 T 450 30 T 525 30 T 600 30 T 675 30 T 750 30 T 825 30 T 900 30 T 975 30 T 1050 30 T 1125 30 T 1200 30" fill="none" stroke="currentColor" stroke-opacity="0.4" stroke-width="2"></path>
+      </svg>
+    </div>
+    <span aria-hidden="true" class="icon icon-puff" style="position: absolute; top: 50%; left: -3.2rem; height: 24rem; width: 32rem; transform: translateY(-50%) rotate(-12deg); pointer-events: none; opacity: 0.2; color: var(--color-reef);"></span>
+    <div class="footer-inner">
+      <div>
+        <p class="font-display" style="font-size: 1.875rem; letter-spacing: 0.1em;">Ohana Barbershop</p>
+        <p class="text-bone" style="margin-top: 0.5rem; font-size: 0.875rem; font-style: italic;">A hui hou kākou</p>
+        <p style="color: rgba(201, 180, 143, 0.6); font-size: 0.75rem;">Until we meet again. Same chair, next cut.</p>
+        <p class="text-sand" style="margin-top: 0.25rem; font-size: 0.875rem;">Albany, OR · Mahalo</p>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: center;">
+        <div style="text-align: center; font-size: 0.875rem; line-height: 1.6;" class="footer-contact">
+          <a href="tel:+14583098765" style="display: block;">(458) 309-8765</a>
+          <a href="mailto:ohanabarbershop1@gmail.com" style="display: block;">ohanabarbershop1@gmail.com</a>
+          <p>820 Pacific Blvd SE Ste F, Albany, OR 97322</p>
+        </div>
+      </div>
+      <div class="footer-links">
+        <a href="https://instagram.com/ohana_barber541" target="_blank" rel="noreferrer">Instagram</a>
+        <a href="https://facebook.com/profile.php?id=61573216836263" target="_blank" rel="noreferrer">Facebook</a>
+      </div>
+    </div>
+    <p class="footer-bottom">
+      &copy; <span id="copyright-year">2026</span> Ohana Barbershop
+    </p>
+  </footer>
+
+  <!-- Mobile Sticky Book Bar -->
+  <div class="mobile-book-bar">
+    <a href="tel:+14583098765" class="mobile-book-call">Call</a>
+    <a href="book.html" class="btn-book">Book Now</a>
+  </div>
+
+  <!-- Floating DEMO Banner -->
+  <aside class="demo-banner" aria-label="Demo site banner">
+    Demo
+  </aside>
+
+  <style>
+    @media (min-width: 768px) {
+      .about-flower-wrap {
+        display: block !important;
+      }
+    }
+  </style>
+  <script src="script.js"></script>
+</body>
+</html>
