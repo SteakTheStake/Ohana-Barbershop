@@ -4,10 +4,12 @@
 > website plus a customer-facing mobile app focused on booking, retention, and merch.
 > Brand: island vibez, warm Aloha spirit, traditional barbering, family-friendly ("Ohana" = family).
 
-> **Decision (Phase 1 started):** Booking stays on **Acuity Scheduling** (embedded on `/book`;
-> per-service deep links via `acuityTypeId` in `apps/web/src/lib/site.ts`). The custom booking
-> engine / Supabase / Stripe-deposit items below are superseded. The mobile app should use the
-> Acuity API or embed as well.
+> **Decision (revised 2026-10-14):** Acuity Scheduling is out. Booking moves to a
+> **self-hosted Easy!Appointments** instance (GPL-3.0 open source — a small scheduling
+> "CMS" for services, providers, hours, and customers; embedded on `/book` via
+> `NEXT_PUBLIC_BOOKING_URL`). The custom booking engine / Supabase / Stripe-deposit
+> items below remain superseded. The mobile app can use the Easy!Appointments REST
+> API (`openapi.yml` in its repo). See `docs/DECISIONS.md` DEC-001 and task BKG-001.
 
 ---
 
@@ -16,7 +18,7 @@
 | Goal | Metric |
 |------|--------|
 | Faster, modern marketing site | Lighthouse ≥ 95, load < 1.5s on 4G |
-| Native-feeling online booking (replace Acuity embed) | Booking completion rate; fewer abandoned bookings |
+| Native-feeling online booking (open-source, self-hosted) | Booking completion rate; fewer abandoned bookings |
 | Reduce no-shows | Deposit/no-show rate via reminders + cancellation policy |
 | Grow repeat business | App accounts, visit history, loyalty perks |
 | Own the content | Custom CMS for services, hours, gallery, merch |
@@ -33,7 +35,7 @@
 - **Database / Auth:** Supabase (Postgres, Row Level Security, phone/email OTP auth)
 - **Payments:** Stripe (cards, Apple/Google Pay) — deposits at booking, merch checkout
 - **Booking engine:** Custom (Supabase Postgres + edge functions) — simple for a single barber
-  - *Alternative:* Cal.com self-hosted or a booking SaaS API if custom feels heavy in Phase 1
+  - *Phase 1 choice:* Easy!Appointments (GPL-3.0, self-hosted via Docker) — see `docs/DECISIONS.md` DEC-001
 - **CMS:** Sanity (free tier) — services, pricing, hours, gallery, blog/updates
 - **Notifications:** Resend (email) + Twilio (SMS) — booking confirmations, reminders (24h/2h)
 - **Hosting:** Vercel (web/API), Supabase (DB), EAS (mobile builds)
@@ -134,7 +136,7 @@ reviews(id, author, rating, source, body, approved)
 
 | Risk / Question | Mitigation / Action |
 |-----------------|---------------------|
-| Custom booking adds ops burden for a solo barber | Keep admin UI dead-simple; consider Cal.com fallback if he prefers |
+| Custom booking adds ops burden for a solo barber | Phase 1 uses Easy!Appointments instead — admin UI is already built; keep it dead-simple and defer any custom engine |
 | No address/hours published today | Must collect in Phase 0 — blocks schema + SEO JSON-LD |
 | Deposits may deter walk-in culture | Make deposits optional/configurable; policy decided in Phase 0 |
 | App store review timelines | Submit web first; app is Phase 2 so site value ships early |

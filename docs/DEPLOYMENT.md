@@ -40,9 +40,18 @@ pnpm lint
 
 | Variable | Value | Required |
 |----------|-------|----------|
-| `NEXT_PUBLIC_ACUITY_URL` | Owner's Acuity Scheduling base URL | No — falls back to placeholder |
+| `NEXT_PUBLIC_BOOKING_URL` | Public base URL of the Easy!Appointments instance (e.g., `https://book.ohana-barbershop.com`) | No — falls back to placeholder |
 
 Set in `.env.local` for local development or in the host's environment settings for production.
+
+## Booking server (Easy!Appointments)
+
+Booking runs on a separate, self-hosted Easy!Appointments instance — it is not part of the static export.
+
+- **Stack:** official `docker-compose.yml` from `github.com/alextselegidis/easyappointments` (PHP/Apache app container + MySQL). Do not commit credentials; configure via the project's env/config on the VPS.
+- **Hosting:** one small VPS (~$5–$10/month) running Docker, fronted by HTTPS (reverse proxy or tunnel) at a dedicated hostname such as `book.ohana-barbershop.com`.
+- **Setup checklist (task BKG-001):** provision VPS → deploy Compose stack → run E!A web installer → configure business settings (services matching `site.ts`, provider, working plan, timezone `America/Los_Angeles`) → configure SMTP → set `NEXT_PUBLIC_BOOKING_URL` → update the website embed component.
+- **Updates:** pull new E!A image releases and redeploy; take a DB backup before each upgrade.
 
 ## Build configuration
 
@@ -97,7 +106,7 @@ The business email (`ohanabarbershop1@gmail.com`) is managed by Google Workspace
 
 - Source code: backed up by Git (GitHub / GitLab / etc.).
 - Static assets: stored in the repository `public/` directory and backed up by Git.
-- Acuity data: retained by Acuity Scheduling; not stored on the website.
+- Booking data: the E!A MySQL database is now our responsibility — configure a scheduled `mysqldump` backup (e.g., nightly, copied off-host) as part of the booking server setup.
 
 ## Rollback procedure
 
@@ -111,7 +120,7 @@ The business email (`ohanabarbershop1@gmail.com`) is managed by Google Workspace
 - [ ] All public routes return 200.
 - [ ] `/sitemap.xml` is valid.
 - [ ] JSON-LD is present on the home page.
-- [ ] Acuity iframe loads on `/book`.
+- [ ] Easy!Appointments booking wizard loads on `/book` and a test appointment can be created.
 - [ ] Phone/email/social links work on `/contact`.
 - [ ] No console errors on any page.
 - [ ] Mobile and desktop layouts look correct.

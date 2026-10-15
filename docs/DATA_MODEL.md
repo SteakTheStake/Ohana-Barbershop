@@ -2,7 +2,7 @@
 
 ## Overview
 
-This phase of the project has **no server-side database**. All business content is stored as static TypeScript data in `apps/web/src/lib/site.ts`. Booking data, customer records, and appointments remain inside Acuity Scheduling.
+The website itself has **no server-side database**. All business content is stored as static TypeScript data in `apps/web/src/lib/site.ts`. Booking data, customer records, and appointments live in the self-hosted Easy!Appointments MySQL database (see `docs/DECISIONS.md` DEC-001).
 
 This document defines the static data contracts used by the website and notes future entities if a backend is added later.
 
@@ -41,7 +41,7 @@ Location: `apps/web/src/lib/site.ts`
 | `hawaiian` | `string \| undefined` | No | Hawaiian name. |
 | `price` | `number` | Yes | Price in USD. |
 | `blurb` | `string` | Yes | Short description. |
-| `acuityTypeId` | `number \| undefined` | No | Acuity appointment type ID for deep linking. |
+| `bookingServiceId` | `number \| undefined` | No | Easy!Appointments service ID — maps a website slug to the matching E!A service for deep links / future API use. (Renamed from `acuityTypeId`; rename lands with task BKG-001.) |
 
 ### `services`
 
@@ -114,7 +114,7 @@ If a backend is added later, the following entities may be introduced. They are 
 | Data | Owner | Storage |
 |------|-------|---------|
 | Website content | Repository | `apps/web/src/lib/site.ts` |
-| Appointment data | Acuity Scheduling | Acuity platform |
+| Appointment & customer data | Easy!Appointments (self-hosted) | E!A MySQL database on the booking VPS |
 | Customer messages | Business / email provider | Business inbox / SMS app |
 | Images / assets | Repository / CDN | `public/` and host CDN |
 

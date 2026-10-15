@@ -25,7 +25,7 @@ const actions = [
 export default function Contact() {
   return (
     <section className="mx-auto max-w-4xl px-5 pt-16">
-      <SectionTitle kicker="Talk Story" title="Contact" />
+      <SectionTitle as="h1" kicker="Talk Story" title="Contact" />
       <div className="grid gap-3 sm:grid-cols-2">
         {actions.map((a) => (
           <a

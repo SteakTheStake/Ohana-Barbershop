@@ -12,7 +12,7 @@ export function BookClient() {
 
   return (
     <section className="mx-auto max-w-4xl px-5 pt-16">
-      <SectionTitle kicker="Schedule" title={selected ? `Book · ${selected.name}` : "Book Now"} />
+      <SectionTitle as="h1" kicker="Schedule" title={selected ? `Book · ${selected.name}` : "Book Now"} />
       <AcuityEmbed typeId={selected?.acuityTypeId} />
       <p className="text-sand mt-4 text-sm">
         Trouble booking? Call <a href={site.phoneHref} className="text-reef">{site.phone}</a>

@@ -29,7 +29,7 @@ export default function Home() {
         <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-2 md:py-24">
           <div>
             <Greeting />
-            <h1 className="font-display mt-3 text-7xl leading-[0.9] tracking-wide md:text-8xl">
+            <h1 className="font-display mt-3 text-7xl leading-[0.9] tracking-wide lg:text-8xl">
               <OceanText>Island Vibez.</OceanText>
               <br />
               <span className="shine-text">
@@ -57,7 +57,7 @@ export default function Home() {
           </div>
           <div className="relative mx-auto w-64 md:w-80">
             {/* <Icon name="turtle" className="bg-current text-reef/10 absolute -inset-12 h-[calc(100%+6rem)] w-[calc(100%+6rem)]" /> */}
-            <Image src="/logo.webp" alt="Ohana Barbershop logo" width={1200} height={1600} className="logo-dark relative" priority />
+            <Image src="/logo-hero.webp" alt="Ohana Barbershop logo" width={640} height={849} className="logo-dark relative" priority fetchPriority="high" />
           </div>
         </div>
         <WaveDivider className="text-reef/40" />

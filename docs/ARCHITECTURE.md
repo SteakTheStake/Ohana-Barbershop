@@ -2,7 +2,7 @@
 
 ## Overview
 
-A static, marketing-first website for Ohana Barbershop in Albany, Oregon. The site is built with Next.js 15 (App Router) and TypeScript, styled with Tailwind CSS v4, and exported as static HTML for deployment on a low-cost or free static host. Booking is delegated to the existing Acuity Scheduling account; no custom backend database, auth, or booking engine is required for this phase.
+A static, marketing-first website for Ohana Barbershop in Albany, Oregon. The site is built with Next.js 15 (App Router) and TypeScript, styled with Tailwind CSS v4, and exported as static HTML for deployment on a low-cost or free static host. Booking is delegated to a self-hosted **Easy!Appointments** instance (GPL-3.0 open-source scheduler, `docs/DECISIONS.md` DEC-001) running as a separate Docker deployment; the website itself still requires no custom backend database, auth, or booking engine.
 
 ## Technology stack
 
@@ -23,7 +23,7 @@ Ohana-Barbershop/
 ├── apps/web/              # Next.js public website
 │   ├── src/app/           # App Router pages
 │   ├── src/components/    # Shared React components
-│   ├── src/lib/site.ts    # Business info, services, Acuity helpers
+│   ├── src/lib/site.ts    # Business info, services, booking helpers
 │   ├── public/            # Static assets (logo, icons, banner)
 │   └── next.config.ts     # Next.js configuration
 ├── docs/                  # Engineering documentation
@@ -40,7 +40,7 @@ All routes are defined as files under `apps/web/src/app/`:
 |-------|------|---------|
 | `/` | `page.tsx` | Home page |
 | `/services` | `services/page.tsx` | Service menu & prices |
-| `/book` | `book/page.tsx` | Booking page with Acuity embed |
+| `/book` | `book/page.tsx` | Booking page with Easy!Appointments embed |
 | `/about` | `about/page.tsx` | Owner story |
 | `/contact` | `contact/page.tsx` | Contact links & hours |
 | `/shop` | `shop/page.tsx` | Merchandise teaser |
@@ -52,9 +52,9 @@ All routes are defined as files under `apps/web/src/app/`:
 
 1. Visitor browses static Next.js pages served from the CDN/host.
 2. Visitor clicks **Book Now** or a service-specific booking link (`/book?service=<slug>`).
-3. The `/book` page renders an Acuity Scheduling iframe pointed at the generic Acuity URL or an appointment-type-specific URL.
-4. Acuity handles scheduling, availability, notifications, and calendar sync.
-5. The website does not store appointment data.
+3. The `/book` page embeds the Easy!Appointments public booking wizard (`<NEXT_PUBLIC_BOOKING_URL>/index.php/booking`) in an iframe.
+4. Easy!Appointments handles scheduling, availability, email notifications, and optional Google Calendar sync; the owner manages services/providers/hours in the E!A admin backend.
+5. The website does not store appointment data — it lives in the self-hosted E!A MySQL database.
 
 ### Customer → Contact
 
@@ -72,7 +72,8 @@ All routes are defined as files under `apps/web/src/app/`:
 
 | Capability | Owner | Notes |
 |------------|-------|-------|
-| Appointments & availability | Acuity Scheduling | Authoritative source for booking |
+| Appointments & availability | Easy!Appointments (self-hosted) | Authoritative source for booking; own MySQL DB |
+| Booking server hosting | Small VPS (Docker Compose) | TBD provider; e.g. `book.ohana-barbershop.com` |
 | Customer contact | Business email / phone | Direct links today; form backend optional |
 | Hosting / CDN | Static host (TBD) | Next.js static export |
 | Domain / DNS | Existing registrar | `ohana-barbershop.com` |
@@ -92,7 +93,7 @@ No authentication required for this phase. There is no owner dashboard, customer
 
 | Variable | Purpose | Required |
 |----------|---------|----------|
-| `NEXT_PUBLIC_ACUITY_URL` | Base Acuity Scheduling URL | No (falls back to placeholder) |
+| `NEXT_PUBLIC_BOOKING_URL` | Public base URL of the Easy!Appointments instance | No (falls back to placeholder) |
 
 ## Hosting & deployment
 
@@ -103,11 +104,13 @@ No authentication required for this phase. There is no owner dashboard, customer
 
 ## Reversal / migration difficulty
 
-- Low. The site is a static React frontend. Moving to a different host requires only rebuilding and uploading the `out/` directory.
-- Replacing Acuity with a custom booking engine later would require adding a backend, database, and API routes; the current iframe-based integration is easy to remove.
+- Low for the website. The site is a static React frontend; moving hosts requires only rebuilding and uploading the `out/` directory, and the booking embed is an isolated component.
+- Medium for booking. Easy!Appointments data lives in our own MySQL, so migrating away means exporting appointment/customer data (DB dump or REST API) — more work than leaving a SaaS, but the business owns the data and cannot be locked out.
 
 ## Known limitations
 
-- Booking is fully delegated to Acuity; the website cannot show real-time availability or prevent double bookings.
+- Booking is fully delegated to Easy!Appointments; the website cannot show real-time availability inline (the E!A REST API could support that later).
+- The booking server is a second thing to keep running, patched, and backed up — owned ops burden the Acuity SaaS previously absorbed.
+- The E!A booking wizard may not support preselecting a service via URL; `/book?service=<slug>` deep links are pending verification (task BKG-001).
 - No server-side validation of contact form submissions (if added) without an external provider.
-- No CMS; all content changes require a code edit and redeploy.
+- No website CMS; marketing content changes require a code edit and redeploy. (Scheduling content — services, hours, staff — is managed in the E!A admin backend.)

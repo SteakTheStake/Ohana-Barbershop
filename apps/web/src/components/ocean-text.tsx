@@ -93,27 +93,35 @@ export function OceanText({ children }: { children: string }) {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let raf = 0;
     let visible = true;
+    let disposed = false;
     const draw = (ms: number) => {
+      raf = 0;
+      if (disposed) return;
       gl.uniform1f(uT, ms / 1000);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       if (!reduce && visible) raf = requestAnimationFrame(draw);
     };
 
     const io = new IntersectionObserver(([e]) => {
+      if (disposed) return;
       visible = e.isIntersecting;
       cancelAnimationFrame(raf);
-      if (visible) raf = requestAnimationFrame(draw);
+      raf = visible ? requestAnimationFrame(draw) : 0;
     });
     const ro = new ResizeObserver(() => {
+      if (disposed) return;
+      cancelAnimationFrame(raf);
       layout();
       draw(performance.now());
     });
     document.fonts.ready.then(() => {
+      if (disposed) return;
       ro.observe(el);
       io.observe(el);
     });
 
     return () => {
+      disposed = true;
       cancelAnimationFrame(raf);
       ro.disconnect();
       io.disconnect();

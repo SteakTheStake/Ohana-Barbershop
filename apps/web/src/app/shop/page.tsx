@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 export default function Shop() {
   return (
     <section className="mx-auto max-w-4xl px-5 pt-16">
-      <SectionTitle kicker="Merch" title="Shop" />
+      <SectionTitle as="h1" kicker="Merch" title="Shop" />
       <div className="bg-coal bg-kapa border-lava rounded-2xl border p-12 text-center">
         <p className="font-display text-6xl tracking-wide">Apparel Dropping Soon</p>
         <NihoBand className="text-ember mx-auto mt-4 !w-24" />

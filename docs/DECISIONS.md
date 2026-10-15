@@ -1,27 +1,32 @@
 # Ohana Barbershop — Architectural Decision Log
 
-## DEC-001 — Keep Acuity Scheduling for booking
+## DEC-001 — Replace Acuity Scheduling with self-hosted Easy!Appointments
 
-**Date:** 2026-10-14
+**Date:** 2026-10-14 (revised 2026-10-14 — supersedes the earlier "keep Acuity" decision)
 
-**Problem:** The preliminary plan proposed a custom booking engine with Supabase, Stripe deposits, and reminders. This adds cost, complexity, and operational burden for a single-barber shop.
+**Problem:** The business is moving off Acuity Scheduling and needs a replacement. The preliminary plan proposed a custom booking engine with Supabase, Stripe deposits, and reminders; the previous version of this decision kept the Acuity embed. Both are now off the table: the business wants a **fully open-source** platform it can own outright — effectively a small CMS for services, providers, working hours, customers, and appointments.
 
 **Options:**
-1. Custom booking engine (Supabase + Stripe + Resend/Twilio).
-2. Keep the existing Acuity Scheduling embed and defer custom booking.
-3. Migrate to Cal.com or another booking SaaS.
+1. **Easy!Appointments** (GPL-3.0) — self-hosted appointment scheduler (PHP + MySQL, official Docker Compose setup). Purpose-built for service businesses: services, providers, working plans/breaks, customer records, email notifications, Google Calendar sync, REST API (`openapi.yml` in repo), and an embeddable public booking page.
+2. **Cal.diy** (MIT) — community fork of Cal.com. Feature-rich embeds and event types, but heavy stack (Next.js + Postgres, build from source, no official image) and upstream marks it for personal/non-production use. Cal.com itself went closed-source in April 2026.
+3. **WordPress + GPL booking plugin** — a literal CMS with scheduling via plugins (Booking Calendar, Amelia free tier), but adds a second PHP stack plus plugin licensing/maintenance for capabilities the site does not otherwise need.
+4. Custom booking engine (Supabase + Stripe + Resend/Twilio) — previously rejected; highest build and maintenance cost.
+5. Another booking SaaS (Calendly, Square Appointments, etc.) — rejected by the business goal of avoiding proprietary scheduling subscriptions.
 
-**Selected approach:** Option 2 — keep Acuity Scheduling. The website embeds Acuity via iframe and uses appointment-type deep links when configured.
+**Selected approach:** Option 1 — **Easy!Appointments**, self-hosted via the project's official Docker Compose stack on a small VPS, exposed at a dedicated hostname (e.g., `book.ohana-barbershop.com`). The static website links to and/or iframe-embeds the Easy!Appointments public booking page (`/index.php/booking`) via `NEXT_PUBLIC_BOOKING_URL`.
 
-**Reason:** Acuity is already integrated with the existing Squarespace site and the business workflow. Replacing it would consume a significant portion of the $2,000 budget and require ongoing maintenance. The website's job in this phase is to drive traffic to Acuity, not to replicate scheduling logic.
+**Reason:** Easy!Appointments is the only option that is (a) fully open source under GPL-3.0 with no enterprise edition, (b) modeled directly on a service business's needs (services, providers, working hours, customers — the "CMS with scheduling" the business asked for), (c) actively maintained since 2014 with an official Docker image, and (d) API-first enough (REST + OpenAPI spec) to support a future custom booking UI or the Phase 2 mobile app without migrating data again. Booking data lives on infrastructure the business controls instead of a third-party SaaS.
 
 **Consequences:**
-- Real-time availability, conflict prevention, reminders, and deposits are handled by Acuity.
-- The website cannot show live availability or prevent double bookings.
-- Booking data stays in Acuity; no database needed on the website.
-- Lower cost, faster delivery, and simpler maintenance.
+- Appointment, customer, service, provider, and availability data is owned by the business in a self-hosted MySQL database — new backup, patching, and uptime responsibilities.
+- A small always-on host is required for Easy!Appointments + MySQL (roughly $5–$10/month VPS); the marketing site itself stays a free/cheap static export.
+- Email notifications come from Easy!Appointments via SMTP (a transactional provider or Gmail app password must be configured).
+- The Easy!Appointments booking wizard does not document a per-service URL parameter; `/book?service=<slug>` preselection must be verified during integration (worst case: wizard always starts at service selection).
+- The existing `AcuityEmbed` component and `acuityTypeId` fields become dead code and will be replaced by a `BookingEmbed` component and `bookingServiceId` fields (task BKG-001).
+- The website still cannot show live availability inline; that remains possible later via the REST API if desired.
+- GPL-3.0 applies to modifications of Easy!Appointments itself; embedding it in the site creates no licensing obligations for our code.
 
-**Status:** Approved and implemented.
+**Status:** Approved — pending implementation (task BKG-001) and owner confirmation of hosting + SMTP.
 
 ---
 

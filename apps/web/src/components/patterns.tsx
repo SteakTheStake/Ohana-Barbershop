@@ -41,11 +41,19 @@ export function WaveDivider({ className = "" }: { className?: string }) {
   );
 }
 
-export function SectionTitle({ kicker, title }: { kicker: string; title: string }) {
+export function SectionTitle({
+  kicker,
+  title,
+  as: Tag = "h2",
+}: {
+  kicker: string;
+  title: string;
+  as?: "h1" | "h2";
+}) {
   return (
     <div className="mb-10">
       <p className="text-reef text-xs font-semibold tracking-[0.3em] uppercase">{kicker}</p>
-      <h2 className="font-display mt-1 text-5xl tracking-wide md:text-6xl">{title}</h2>
+      <Tag className="font-display mt-1 text-5xl tracking-wide md:text-6xl">{title}</Tag>
       <NihoBand className="text-sand mt-3 !w-32" />
     </div>
   );

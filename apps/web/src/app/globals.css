@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@layer base {
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--color-reef);
+    outline-offset: 2px;
+  }
+}
+
 @theme {
   --color-ink: #0b0d0e;
   --color-coal: #15191b;
@@ -46,6 +54,35 @@ body {
   animation: drift 40s linear infinite;
 }
 
+/* Motif-masked section edges: footer wave hem + header niho hem */
+.wave-edge {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40'%3E%3Cpath d='M0 20 Q 37.5 0 75 20 T 150 20 T 225 20 T 300 20 T 375 20 T 450 20 T 525 20 T 600 20 T 675 20 T 750 20 T 825 20 T 900 20 T 975 20 T 1050 20 T 1125 20 T 1200 20' fill='none' stroke='%232fa59a' stroke-opacity='.5' stroke-width='2'/%3E%3Cpath d='M0 30 Q 37.5 10 75 30 T 150 30 T 225 30 T 300 30 T 375 30 T 450 30 T 525 30 T 600 30 T 675 30 T 750 30 T 825 30 T 900 30 T 975 30 T 1050 30 T 1125 30 T 1200 30' fill='none' stroke='%232fa59a' stroke-opacity='.2' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-position: 0 0;
+  background-size: 1200px 40px;
+  -webkit-mask-image: linear-gradient(#000 0 0), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40'%3E%3Cpath d='M0 20 Q 37.5 0 75 20 T 150 20 T 225 20 T 300 20 T 375 20 T 450 20 T 525 20 T 600 20 T 675 20 T 750 20 T 825 20 T 900 20 T 975 20 T 1050 20 T 1125 20 T 1200 20 V40 H0 Z' fill='%23fff'/%3E%3C/svg%3E");
+  mask-image: linear-gradient(#000 0 0), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40'%3E%3Cpath d='M0 20 Q 37.5 0 75 20 T 150 20 T 225 20 T 300 20 T 375 20 T 450 20 T 525 20 T 600 20 T 675 20 T 750 20 T 825 20 T 900 20 T 975 20 T 1050 20 T 1125 20 T 1200 20 V40 H0 Z' fill='%23fff'/%3E%3C/svg%3E");
+  -webkit-mask-size: 100% calc(100% - 40px), 1200px 40px;
+  mask-size: 100% calc(100% - 40px), 1200px 40px;
+  -webkit-mask-position: 0 100%, 0 0;
+  mask-position: 0 100%, 0 0;
+  -webkit-mask-repeat: no-repeat, repeat-x;
+  mask-repeat: no-repeat, repeat-x;
+  animation: edge-drift 40s linear infinite;
+}
+
+@keyframes edge-drift {
+  to {
+    background-position-x: -1200px;
+    -webkit-mask-position: 0 100%, -1200px 0;
+    mask-position: 0 100%, -1200px 0;
+  }
+}
+
+.ocean-text {
+  white-space: nowrap;
+}
+
 .ocean-text[data-gl] {
   color: transparent;
 }
@@ -84,6 +121,8 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .animate-drift,
+  .wave-edge,
+  .animate-pulse,
   .shine-text,
   .shine-text .sparkle {
     animation: none;

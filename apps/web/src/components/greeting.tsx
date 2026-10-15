@@ -19,7 +19,7 @@ export function Greeting() {
     <p className="text-reef h-4 text-xs font-semibold tracking-[0.35em] uppercase" title={g?.say}>
       {g ? (
         <>
-          {g.hi} <span className="text-sand/60 normal-case tracking-normal italic">· {g.en}</span>
+          {g.hi} <span className="text-sand/70 normal-case tracking-normal italic">· {g.en}</span>
         </>
       ) : (
         "Aloha"

@@ -37,13 +37,13 @@ The deliverable is a beautiful, functional, production-quality small-business we
 
 # CURRENT EXECUTION STATE
 
-Current phase: PHASE 2 — Public page polish  
-Current task ID: SEO-001  
-Task status: COMPLETE  
-Last successful verification: 2026-10-14 — `pnpm build` and `pnpm lint` pass; every public page has a unique `<title>` and `<meta name="description">`; Open Graph tags verified in output HTML.  
-Known blockers: None.  
-Files relevant to current task: `apps/web/src/app/layout.tsx`, `apps/web/src/app/page.tsx`, `apps/web/src/app/services/page.tsx`, `apps/web/src/app/book/page.tsx`, `apps/web/src/app/about/page.tsx`, `apps/web/src/app/contact/page.tsx`, `apps/web/src/app/shop/page.tsx`  
-Next required action: Begin **VIS-001 — Home page visual QA and responsive fixes**.
+- Current phase: PHASE 2 — Public page polish.
+- Current task ID: PERF-001.
+- Task status: BLOCKED — image/font optimizations and OceanText animation lifecycle fix implemented. Home Performance/LCP and booking Best Practices still fail the overall gate.
+- Last successful verification: 2026-10-14 — `node --test apps/web/src/components/ocean-text.test.mjs` (5 tests), `pnpm build`, `pnpm lint`, image/HTTP assertions, font-preload checks, and `git diff --check` pass. Fresh home screenshots at 375/390/768/1024/1440px show unchanged design and no horizontal overflow. Three-run mobile Lighthouse medians using verified local gzip delivery: Home 82 / LCP 2.65s (FAIL); Services/About/Contact/Shop 98 / LCP 2.35–2.36s (PASS); Book 97 / LCP 2.42s (PASS Performance/LCP), Best Practices 77 (FAIL). Accessibility 96–100 and SEO 100 pass. These are local compressed-delivery lab results, not deployed-host verification.
+- Known blockers: Home's remaining main-thread work (median TBT 578ms) and LCP 2.65s need investigation; the loop fix is a verified correctness improvement but did not measurably improve the score. `/book`'s Acuity cookies still cause Best Practices 77; provider cutover belongs to BKG-001. Controlled same-build raw/gzip comparison confirms that uncompressed serving materially inflated prior LCP results. Actual production compression/cache headers remain unverified; no deployment changes were made. BKG-001 needs owner VPS/DNS/SMTP decisions; HRS-001, GAL-001, FRM-001 remain blocked. Font preloads and animation-loop accumulation are RESOLVED.
+- Files relevant to current task: `apps/web/src/components/ocean-text.tsx`, `apps/web/src/components/ocean-text.test.mjs`, `docs/TEST_PLAN.md`. Reports: `C:/Users/gabec/AppData/Local/Temp/vqa/delivery-before-{raw,gzip}-{home,services}-{1,2,3}.json`, `scheduling-gzip-<page>-<run>.json`, `delivery-summary.json`, and `scheduling-summary.json`.
+- Next required action: Continue PERF-001's home main-thread/LCP investigation under controlled compressed delivery and resolve the booking-provider Best Practices blocker when BKG-001 can proceed. Verify actual host compression at deployment. Do not mark COMPLETE or begin DEP-001 in this execution.
 
 ---
 
@@ -51,13 +51,13 @@ Next required action: Begin **VIS-001 — Home page visual QA and responsive fix
 
 ## Project mission
 
-Replace the existing Squarespace site for Ohana Barbershop with a fast, modern, custom static website that reflects the shop's island brand, showcases services and prices, tells the owner's story, and drives online bookings through the existing Acuity Scheduling account.
+Replace the existing Squarespace site for Ohana Barbershop with a fast, modern, custom static website that reflects the shop's island brand, showcases services and prices, tells the owner's story, and drives online bookings through a self-hosted, open-source Easy!Appointments instance.
 
 ## Business requirements
 
 1. Present a welcoming, professional, mobile-first marketing site.
 2. Display accurate services, prices, and business contact information.
-3. Enable online booking via Acuity Scheduling.
+3. Enable online booking via Easy!Appointments (self-hosted, open source — see `docs/DECISIONS.md` DEC-001).
 4. Improve local SEO with metadata, sitemap, JSON-LD, and a canonical domain.
 5. Provide clear contact channels (phone, text, email, social).
 6. Support future expansion (gallery, merchandise, dashboard) without re-architecture.
@@ -67,7 +67,7 @@ Replace the existing Squarespace site for Ohana Barbershop with a fast, modern, 
 In scope for this phase:
 - Home, Services, About, Contact, Shop, and Book pages.
 - Responsive navigation, footer, and mobile book bar.
-- Acuity Scheduling iframe embed with per-service deep links.
+- Easy!Appointments booking wizard embed on `/book` (per-service deep links pending verification).
 - SEO metadata, Open Graph, JSON-LD, and sitemap.
 - Static export and deployment to a low-cost static host.
 - Accessibility and performance improvements.
@@ -90,7 +90,7 @@ Out of scope:
 - **Package manager:** pnpm workspaces (root + `apps/web`).
 - **Build status:** `pnpm build` succeeds; `pnpm lint` succeeds.
 - **Routes implemented:** `/`, `/services`, `/book`, `/about`, `/contact`, `/shop`, `/sitemap.xml`.
-- **Booking:** Acuity embed via `AcuityEmbed` component; `acuityTypeId` values are placeholders.
+- **Booking:** Acuity embed via `AcuityEmbed` component still present in code; scheduled for replacement by an Easy!Appointments embed in task BKG-001 (`acuityTypeId` → `bookingServiceId`).
 - **Design tokens:** Colors, typography, and patterns are defined in `globals.css`.
 - **Static assets:** Logo, SVG icons, banner image in `apps/web/public/`.
 - **Legacy files:** Root `*.html` and `style.css` are the old static prototype and are not served by Next.js.
@@ -102,7 +102,7 @@ Out of scope:
 - **Next.js 15 App Router + TypeScript:** Already in use; mature, SEO-friendly, builds to static export.
 - **Tailwind CSS v4:** Already in use; tokens match the brand and build passes.
 - **Static export:** No backend is needed for a marketing site; keeps hosting cheap and portable.
-- **Acuity Scheduling embed:** Existing business workflow; avoids custom booking complexity.
+- **Easy!Appointments (self-hosted):** Open-source (GPL-3.0) scheduler built for service businesses; replaces Acuity so the business owns its booking data. Runs as a separate Docker deployment; website integrates via iframe/link only.
 - **No database / auth / CMS:** Content changes are infrequent; static data keeps the stack simple.
 
 See `docs/ARCHITECTURE.md` and `docs/DECISIONS.md` for full details.
@@ -132,13 +132,13 @@ See `docs/ARCHITECTURE.md` and `docs/DECISIONS.md` for full details.
 | About | Owner story, key facts, decorative icon | Book Now |
 | Contact | Phone, text, email, Instagram, hours, location | Call, Text, Email |
 | Shop | Merchandise teaser | Follow Instagram |
-| Book | Acuity embed, fallback contact | Call if trouble |
+| Book | Easy!Appointments embed, fallback contact | Call if trouble |
 
 ### Booking
 
-- `/book` displays the generic Acuity iframe.
-- `/book?service=<slug>` preselects the matching Acuity appointment type once `acuityTypeId` is configured.
-- If Acuity fails to load, show fallback contact message.
+- `/book` displays the Easy!Appointments booking wizard iframe (`<NEXT_PUBLIC_BOOKING_URL>/index.php/booking`).
+- `/book?service=<slug>` preselects the matching service **if** the E!A wizard supports a deep-link parameter — verify during BKG-001; otherwise the wizard always opens at service selection.
+- If the booking server fails to load, show fallback contact message.
 
 ### SEO
 
@@ -167,7 +167,8 @@ CFG-001 Configure static export
     ├── SEO-001 Page metadata
     ├── VIS-001 Home visual QA
     ├── VIS-002 Services visual QA
-    ├── VIS-003 Book page & Acuity fallback
+    ├── BKG-001 Replace Acuity embed with Easy!Appointments (BLOCKED — needs VPS + SMTP)
+    │       └── VIS-003 Book page & booking fallback
     ├── VIS-004 About visual QA
     ├── VIS-005 Contact visual QA
     ├── VIS-006 Shop visual QA
@@ -183,6 +184,9 @@ GAL-001 Gallery page (BLOCKED — photo assets)
 
 FRM-001 Contact form backend (BLOCKED — provider selection)
     └── Replaces/enhances VIS-005
+
+Note: VIS-003 verifies the booking embed; run it after BKG-001 if the
+Easy!Appointments instance is ready, otherwise against the placeholder URL.
 ```
 
 ## Development phases
@@ -354,7 +358,7 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 
 **Priority:** High.
 
-**Status:** NOT STARTED.
+**Status:** COMPLETE (2026-10-14).
 
 **Dependencies:** CFG-001.
 
@@ -370,11 +374,11 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 5. Ensure CTA buttons are tappable on mobile.
 
 **Acceptance criteria:**
-- [ ] No horizontal scroll at any viewport.
-- [ ] Hero logo is not stretched.
-- [ ] Text remains legible.
-- [ ] CTA buttons are prominent and reachable.
-- [ ] Reduced-motion mode disables animations.
+- [x] No horizontal scroll at any viewport.
+- [x] Hero logo is not stretched.
+- [x] Text remains legible.
+- [x] CTA buttons are prominent and reachable.
+- [x] Reduced-motion mode disables animations.
 
 **Verification:**
 - `pnpm build && pnpm start` or `pnpm dev`
@@ -398,7 +402,7 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 
 **Priority:** High.
 
-**Status:** NOT STARTED.
+**Status:** COMPLETE (2026-10-14).
 
 **Dependencies:** VIS-001.
 
@@ -413,10 +417,10 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 4. Test at all target viewports.
 
 **Acceptance criteria:**
-- [ ] All services display correctly.
-- [ ] Prices are aligned and readable.
-- [ ] Row hover/focus states are visible.
-- [ ] Mobile tap targets are ≥ 44px tall.
+- [x] All services display correctly.
+- [x] Prices are aligned and readable.
+- [x] Row hover/focus states are visible.
+- [x] Mobile tap targets are ≥ 44px tall.
 
 **Verification:**
 - `pnpm dev`
@@ -430,35 +434,87 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 
 **Rollback:** Revert page/component changes.
 
+**Next task:** BKG-001 (if unblocked) or VIS-003.
+
+---
+
+### BKG-001 — Replace Acuity embed with Easy!Appointments
+
+**Objective:** Migrate booking from Acuity Scheduling to a self-hosted, open-source Easy!Appointments instance per DEC-001.
+
+**Priority:** High (required before production launch).
+
+**Status:** BLOCKED — needs a VPS for the booking server and an SMTP provider decision from the owner.
+
+**Dependencies:** VIS-002 (independent technically; sequenced here to avoid blocking page QA). External: VPS + DNS hostname for the booking server; SMTP credentials.
+
+**Files to inspect:** `apps/web/src/components/acuity-embed.tsx`, `apps/web/src/app/book/book-client.tsx`, `apps/web/src/app/book/page.tsx`, `apps/web/src/lib/site.ts`, `docs/INTEGRATIONS.md` section 1, `docs/DEPLOYMENT.md` "Booking server".
+
+**Files to modify or create:**
+- `apps/web/src/components/acuity-embed.tsx` → rename/rewrite as `booking-embed.tsx` (iframe → `<NEXT_PUBLIC_BOOKING_URL>/index.php/booking`, lazy load, `onError`/timeout fallback).
+- `apps/web/src/lib/site.ts` — rename `acuityTypeId` → `bookingServiceId`; populate with E!A service IDs once services are created in the admin backend.
+- `apps/web/src/app/book/book-client.tsx`, `apps/web/src/app/book/page.tsx`, `apps/web/src/app/page.tsx` — update imports and Acuity copy ("24/7 via Acuity" → generic booking copy).
+
+**Required implementation:**
+1. Provision a small VPS (~$5–$10/mo) and deploy the official Easy!Appointments Docker Compose stack (app + MySQL).
+2. Run the E!A web installer; set timezone `America/Los_Angeles`, business info, and the working plan.
+3. Create the owner as a provider; create the five services to mirror `site.ts` (Haircut $35, Skin Fade $40, Buzz/Senior $25, Keiki Kutz $25, Beard Trim $20) and record their service IDs.
+4. Configure SMTP in E!A settings; send a test booking and confirm the notification email.
+5. Point a hostname (e.g., `book.ohana-barbershop.com`) at the VPS with HTTPS.
+6. Rewrite the website embed: iframe the E!A booking page via `NEXT_PUBLIC_BOOKING_URL`; verify whether the wizard honors a service preselect parameter (check `openapi.yml` / E!A docs); wire `bookingServiceId` if supported, otherwise drop preselection.
+7. Schedule nightly `mysqldump` backups of the E!A database (copy off-host).
+8. Remove the Acuity embed script (`https://embed.acuityscheduling.com/js/embed.js`) and placeholder env var.
+
+**Acceptance criteria:**
+- [ ] `/book` loads the E!A booking wizard in an iframe without horizontal scroll.
+- [ ] A test appointment booked through the wizard appears in the E!A admin calendar and triggers an email.
+- [ ] Fallback contact text shows if the booking server is unreachable.
+- [ ] No Acuity URLs, scripts, or `acuityTypeId` references remain in `apps/web`.
+- [ ] `NEXT_PUBLIC_BOOKING_URL` documented; placeholder fallback preserved for local dev.
+- [ ] DB backup job verified on the VPS.
+
+**Verification:**
+- `pnpm build && pnpm lint` pass.
+- Manual booking smoke test end-to-end on staging/production hostname.
+- `grep -ri acuity apps/web/src` returns no matches.
+
+**Expected result:** Fully open-source, self-hosted booking replaces Acuity; site booking UX unchanged or better.
+
+**Completion evidence:** E!A admin screenshot, test appointment confirmation email, grep output.
+
+**Regression considerations:** Per-service preselection may be lost if E!A does not support it — document the outcome in `docs/INTEGRATIONS.md`. `book.html`/`index.html` legacy prototype still references Acuity but is not served; leave or clean separately.
+
+**Rollback:** Keep `NEXT_PUBLIC_BOOKING_URL` pointing at the placeholder until cutover; revert embed component changes if needed.
+
 **Next task:** VIS-003.
 
 ---
 
-### VIS-003 — Book page visual QA and Acuity fallback
+### VIS-003 — Book page visual QA and booking fallback
 
-**Objective:** Ensure the booking page presents Acuity cleanly and degrades gracefully.
+**Objective:** Ensure the booking page presents the scheduling embed cleanly and degrades gracefully.
 
 **Priority:** High.
 
-**Status:** NOT STARTED.
+**Status:** COMPLETE (2026-10-14 — verified against the Acuity placeholder; re-verify at BKG-001 cutover).
 
-**Dependencies:** VIS-002.
+**Dependencies:** VIS-002; BKG-001 if the Easy!Appointments instance is available (otherwise verify against the placeholder and re-verify at cutover).
 
-**Files to inspect:** `apps/web/src/app/book/page.tsx`, `apps/web/src/components/acuity-embed.tsx`, `apps/web/src/lib/site.ts`.
+**Files to inspect:** `apps/web/src/app/book/page.tsx`, `apps/web/src/components/acuity-embed.tsx` (or `booking-embed.tsx` after BKG-001), `apps/web/src/lib/site.ts`.
 
 **Files to modify or create:** Same files if defects found.
 
 **Required implementation:**
-1. Verify iframe height is appropriate for Acuity content.
+1. Verify iframe height is appropriate for the booking wizard content.
 2. Add a client-side fallback message if the iframe fails to load (e.g., timeout or `onError`).
-3. Confirm `/book?service=<slug>` updates the page title and passes the correct `appointmentType` to Acuity when configured.
+3. Confirm `/book?service=<slug>` updates the page title and preselects the service when E!A deep linking is supported.
 4. Test at all target viewports.
 
 **Acceptance criteria:**
-- [ ] Iframe loads without horizontal scroll.
-- [ ] Fallback contact text is visible if Acuity fails.
-- [ ] Page title reflects selected service.
-- [ ] Mobile layout does not break.
+- [x] Iframe loads without horizontal scroll.
+- [x] Fallback contact text is visible if the booking server fails.
+- [x] Page title reflects selected service.
+- [x] Mobile layout does not break.
 
 **Verification:**
 - `pnpm dev`
@@ -483,7 +539,7 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 
 **Priority:** Medium.
 
-**Status:** NOT STARTED.
+**Status:** COMPLETE (2026-10-14 — no defects found; no code changes required).
 
 **Dependencies:** VIS-003.
 
@@ -497,9 +553,9 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 3. Test at all target viewports.
 
 **Acceptance criteria:**
-- [ ] Content is readable and well-paced.
-- [ ] No overlapping elements.
-- [ ] CTA button is visible.
+- [x] Content is readable and well-paced.
+- [x] No overlapping elements.
+- [x] CTA button is visible.
 
 **Verification:**
 - `pnpm dev` + manual inspection.
@@ -522,7 +578,7 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 
 **Priority:** High.
 
-**Status:** NOT STARTED.
+**Status:** COMPLETE (2026-10-14 — no defects found; no code changes required).
 
 **Dependencies:** VIS-004.
 
@@ -537,10 +593,10 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 4. Test at all target viewports.
 
 **Acceptance criteria:**
-- [ ] All contact links work.
-- [ ] Cards are readable and well-aligned.
-- [ ] Tap targets are large enough on mobile.
-- [ ] Hours display correctly when available.
+- [x] All contact links work.
+- [x] Cards are readable and well-aligned.
+- [x] Tap targets are large enough on mobile.
+- [x] Hours display correctly when available.
 
 **Verification:**
 - `pnpm dev`
@@ -565,7 +621,7 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 
 **Priority:** Low.
 
-**Status:** NOT STARTED.
+**Status:** COMPLETE (2026-10-14 — no defects found; no code changes required).
 
 **Dependencies:** VIS-005.
 
@@ -579,9 +635,9 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 3. Test at all target viewports.
 
 **Acceptance criteria:**
-- [ ] Teaser card is centered and visually balanced.
-- [ ] Link is reachable and opens Instagram.
-- [ ] No layout issues on mobile.
+- [x] Teaser card is centered and visually balanced.
+- [x] Link is reachable and opens Instagram.
+- [x] No layout issues on mobile.
 
 **Verification:**
 - `pnpm dev` + manual inspection.
@@ -604,7 +660,7 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 
 **Priority:** High.
 
-**Status:** NOT STARTED.
+**Status:** COMPLETE (2026-10-14).
 
 **Dependencies:** VIS-001 through VIS-006.
 
@@ -622,12 +678,12 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 7. Test reduced-motion preference.
 
 **Acceptance criteria:**
-- [ ] All interactive elements are keyboard accessible.
-- [ ] Focus is visible.
-- [ ] Heading hierarchy is logical.
-- [ ] Images have descriptive `alt` or are hidden from AT.
-- [ ] Color contrast passes AA for normal and large text.
-- [ ] Animations respect `prefers-reduced-motion`.
+- [x] All interactive elements are keyboard accessible.
+- [x] Focus is visible.
+- [x] Heading hierarchy is logical.
+- [x] Images have descriptive `alt` or are hidden from AT.
+- [x] Color contrast passes AA for normal and large text.
+- [x] Animations respect `prefers-reduced-motion`.
 
 **Verification:**
 - Keyboard-only navigation test.
@@ -652,7 +708,7 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 
 **Priority:** High.
 
-**Status:** NOT STARTED.
+**Status:** BLOCKED (2026-10-14 — image/font optimization and animation lifecycle fixes implemented. Compressed-delivery medians pass Performance/LCP on five pages; Home still fails and `/book` Best Practices remains blocked by Acuity cookies. No production-host verification yet).
 
 **Dependencies:** A11Y-001.
 
@@ -668,11 +724,11 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 5. Verify `next/font` preloading.
 
 **Acceptance criteria:**
-- [ ] Lighthouse Performance ≥ 90.
-- [ ] Lighthouse Accessibility ≥ 90.
-- [ ] Lighthouse Best Practices ≥ 90.
-- [ ] Lighthouse SEO ≥ 95.
-- [ ] LCP < 2.5s on simulated 4G.
+- [ ] Lighthouse Performance ≥ 90. Latest three-run gzip-delivery medians: five pages 97–98 (pass); Home 82 (fail). Local lab results, not production-host verification.
+- [x] Lighthouse Accessibility ≥ 90. Measured 96–100 across all six pages.
+- [ ] Lighthouse Best Practices ≥ 90. Five pages score 100; `/book` scores 77 (Acuity third-party cookies/inspector issues).
+- [x] Lighthouse SEO ≥ 95. Measured 100 across all six pages.
+- [ ] LCP < 2.5s on simulated 4G. Latest three-run gzip medians: Home 2.65s (fail); other five pages 2.35–2.42s (pass). Raw delivery substantially worsens LCP; actual deployed-host delivery remains to be verified.
 
 **Verification:**
 - `pnpm build` + `pnpm start`
@@ -680,7 +736,7 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 
 **Expected result:** All pages pass the defined thresholds.
 
-**Completion evidence:** Lighthouse report screenshots or JSON.
+**Completion evidence:** Baseline and optimized JSON reports for all six pages plus `perf-summary.json` in `C:/Users/gabec/AppData/Local/Temp/vqa/`. Exact scores, blockers, changed assets, and viewport evidence are recorded in the PERF-001 entry in `docs/PROGRESS.md`. Reports demonstrate partial progress, not completion.
 
 **Regression considerations:** Do not degrade visual quality for score gains.
 
@@ -707,7 +763,7 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 **Required implementation:**
 1. Select a static host (Vercel, Netlify, Cloudflare Pages, or existing provider).
 2. Configure build command (`pnpm build`) and output directory (`dist/`).
-3. Set `NEXT_PUBLIC_ACUITY_URL` in host environment if provided by owner.
+3. Set `NEXT_PUBLIC_BOOKING_URL` in host environment once the Easy!Appointments instance is live (BKG-001).
 4. Configure custom domain `ohana-barbershop.com`.
 5. Verify HTTPS and DNS resolution.
 6. Run post-deployment verification checklist.
@@ -716,7 +772,7 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 - [ ] Production URL serves the site over HTTPS.
 - [ ] All public routes return 200.
 - [ ] `/sitemap.xml` is valid.
-- [ ] Acuity iframe loads.
+- [ ] Easy!Appointments booking wizard loads on `/book`.
 - [ ] Contact links work.
 - [ ] DNS records are correct.
 
@@ -878,8 +934,9 @@ Every task must pass the applicable gates from PART 7:
 
 | Dependency | Status | Impact | Action required |
 |------------|--------|--------|-----------------|
-| Acuity Scheduling URL | Resolved | Booking embed works | Set `NEXT_PUBLIC_ACUITY_URL` in production if owner provides a custom URL. |
-| Acuity appointment type IDs | Unresolved | Per-service deep links | Owner must create appointment types in Acuity and provide IDs. |
+| Easy!Appointments VPS + hostname | BLOCKED | Booking server exists | Provision VPS, deploy E!A Docker stack, point `book.` hostname (BKG-001). |
+| SMTP provider for booking emails | BLOCKED | Booking notifications | Owner decision (Gmail app password or transactional provider). |
+| E!A service IDs / deep-link support | Unresolved | Per-service preselection | Create services in E!A admin; verify wizard preselect param (BKG-001). |
 | Business hours | BLOCKED | Contact page hours | Confirm hours with owner. |
 | Gallery photos | BLOCKED | Gallery page | Collect approved photos from owner. |
 | Contact form backend | BLOCKED | Contact form | Select provider with owner. |
@@ -906,13 +963,14 @@ Before the site is considered release-ready:
 - Architecture, design system, data model, integrations, test plan, deployment, and decisions documented.
 - `pnpm build` and `pnpm lint` pass.
 - Public pages are implemented but require static export configuration and visual/accessibility polish.
+- Booking is migrating from Acuity Scheduling to self-hosted Easy!Appointments (DEC-001, task BKG-001); the Acuity embed remains in code until BKG-001.
 - Several content tasks are blocked pending owner input.
 
 ## Next executable task
 
-**CFG-001 — Configure static export and production build**
+**VIS-002 — Services page visual QA**
 
-This is the first implementation task. It has no external blockers and is required before any deployment work can begin.
+Then **BKG-001 — Replace Acuity embed with Easy!Appointments** once its infrastructure blockers (VPS, hostname, SMTP) are cleared; VIS-003 verifies the result.
 
 ---
 

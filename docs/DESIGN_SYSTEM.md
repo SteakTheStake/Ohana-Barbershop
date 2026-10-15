@@ -168,7 +168,7 @@ Test at: 375px, 390px, 768px, 1024px, 1440px.
 ### Book `/book`
 
 1. Section title (dynamic if service selected).
-2. Acuity iframe embed with rounded container.
+2. Booking iframe embed (Easy!Appointments wizard) with rounded container.
 3. Fallback contact text below iframe.
 
 ### About `/about`

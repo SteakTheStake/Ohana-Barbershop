@@ -1,0 +1,26 @@
+diff --git a/dist/build/webpack/plugins/next-font-manifest-plugin.js b/dist/build/webpack/plugins/next-font-manifest-plugin.js
+index 1752d5b645d48ec276d04669486e16a849aaac24..7c46a6f87ed7f80c58600481cf900f432f1f38ba 100644
+--- a/dist/build/webpack/plugins/next-font-manifest-plugin.js
++++ b/dist/build/webpack/plugins/next-font-manifest-plugin.js
+@@ -57,7 +57,7 @@ class NextFontManifestPlugin {
+                     // After all modules are created, we collect the modules that was created by next-font-loader.
+                     (0, _utils.traverseModules)(compilation, (mod, _chunk, chunkGroup)=>{
+                         var _mod_request;
+-                        if (mod == null ? void 0 : (_mod_request = mod.request) == null ? void 0 : _mod_request.includes('/next-font-loader/index.js?')) {
++                        if (mod == null ? void 0 : (_mod_request = mod.request) == null ? void 0 : _mod_request.replace(/\\/g, '/').includes('/next-font-loader/index.js?')) {
+                             var _mod_buildInfo;
+                             if (!((_mod_buildInfo = mod.buildInfo) == null ? void 0 : _mod_buildInfo.assets)) return;
+                             const chunkEntryName = (appDirBase + chunkGroup.name).replace(/[\\/]/g, _path.default.sep);
+diff --git a/dist/esm/build/webpack/plugins/next-font-manifest-plugin.js b/dist/esm/build/webpack/plugins/next-font-manifest-plugin.js
+index 710d38ad552b433edc97351260bed86ae9ee1ef4..ae23ef3510729436f8571ce48414eaeb12e537f5 100644
+--- a/dist/esm/build/webpack/plugins/next-font-manifest-plugin.js
++++ b/dist/esm/build/webpack/plugins/next-font-manifest-plugin.js
+@@ -55,7 +55,7 @@ const PLUGIN_NAME = 'NextFontManifestPlugin';
+                     // After all modules are created, we collect the modules that was created by next-font-loader.
+                     traverseModules(compilation, (mod, _chunk, chunkGroup)=>{
+                         var _mod_request;
+-                        if (mod == null ? void 0 : (_mod_request = mod.request) == null ? void 0 : _mod_request.includes('/next-font-loader/index.js?')) {
++                        if (mod == null ? void 0 : (_mod_request = mod.request) == null ? void 0 : _mod_request.replace(/\\/g, '/').includes('/next-font-loader/index.js?')) {
+                             var _mod_buildInfo;
+                             if (!((_mod_buildInfo = mod.buildInfo) == null ? void 0 : _mod_buildInfo.assets)) return;
+                             const chunkEntryName = (appDirBase + chunkGroup.name).replace(/[\\/]/g, path.sep);

@@ -24,7 +24,7 @@ const facts = [
 export default function About() {
   return (
     <section className="mx-auto max-w-4xl px-5 pt-16">
-      <SectionTitle kicker="Your Barber" title="Meet Spencer" />
+      <SectionTitle as="h1" kicker="Your Barber" title="Meet Spencer" />
       <div className="grid gap-10 md:grid-cols-[1fr_auto]">
         <div>
           <p className="text-bone/80 max-w-md text-lg">
