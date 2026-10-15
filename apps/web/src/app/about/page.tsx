@@ -1,8 +1,19 @@
 import { BookButton } from "@/components/chrome";
 import { Icon } from "@/components/icon";
 import { SectionTitle } from "@/components/patterns";
+import type { Metadata } from "next";
 
-export const metadata = { title: "About" };
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Meet Spencer, owner of Ohana Barbershop in Albany, OR. Locally owned, island vibes, and traditional barbering for the whole ohana.",
+  openGraph: {
+    title: "About | Ohana Barbershop",
+    description:
+      "Meet Spencer, owner of Ohana Barbershop in Albany, OR. Locally owned, island vibes, and traditional barbering for the whole ohana.",
+    images: ["/logo.webp"],
+  },
+};
 
 const facts = [
   ["From", "Hauʻula, North Shore Oʻahu"],

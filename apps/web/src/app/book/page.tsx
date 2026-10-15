@@ -1,7 +1,18 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { BookClient } from "./book-client";
 
-export const metadata = { title: "Book" };
+export const metadata: Metadata = {
+  title: "Book",
+  description:
+    "Book your haircut, skin fade, or beard trim at Ohana Barbershop in Albany, OR. Online scheduling powered by Acuity.",
+  openGraph: {
+    title: "Book | Ohana Barbershop",
+    description:
+      "Book your haircut, skin fade, or beard trim at Ohana Barbershop in Albany, OR. Online scheduling powered by Acuity.",
+    images: ["/logo.webp"],
+  },
+};
 
 export default function Book() {
   return (

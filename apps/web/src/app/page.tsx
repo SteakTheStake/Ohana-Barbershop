@@ -7,6 +7,19 @@ import { OceanText } from "@/components/ocean-text";
 import { NihoBand, SectionTitle, WaveDivider } from "@/components/patterns";
 import { ServiceList } from "@/components/service-list";
 import { site } from "@/lib/site";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Island Vibez. Clean Cuts.",
+  description:
+    "Island-style barbershop in Albany, OR. Haircuts, skin fades, beard trims, and keiki kutz. Book online or call us.",
+  openGraph: {
+    title: "Island Vibez. Clean Cuts. | Ohana Barbershop",
+    description:
+      "Island-style barbershop in Albany, OR. Haircuts, skin fades, beard trims, and keiki kutz. Book online or call us.",
+    images: ["/logo.webp"],
+  },
+};
 
 export default function Home() {
   return (

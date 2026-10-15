@@ -6,7 +6,7 @@
 |----|-------|--------|-------|
 | PLAN-001 | Audit repository and create implementation plan | COMPLETE | Docs created; build/lint pass. |
 | CFG-001 | Configure static export and production build | COMPLETE | Static export to `out/` verified; all routes 200. |
-| SEO-001 | Add page-specific metadata and descriptions | NOT STARTED | |
+| SEO-001 | Add page-specific metadata and descriptions | COMPLETE | Unique titles/descriptions/OG on all pages. |
 | VIS-001 | Home page visual QA and responsive fixes | NOT STARTED | |
 | VIS-002 | Services page visual QA | NOT STARTED | |
 | VIS-003 | Book page visual QA and Acuity fallback | NOT STARTED | |
@@ -60,4 +60,14 @@
 
 ## Next required action
 
-Begin **SEO-001 — Add page-specific metadata and descriptions**.
+### 2026-10-14 — SEO-001 complete
+
+- Added unique `Metadata` exports to `page.tsx`, `services/page.tsx`, `book/page.tsx`, `about/page.tsx`, `contact/page.tsx`, and `shop/page.tsx`.
+- Each page now has a unique `<title>`, `<meta name="description">`, and Open Graph `title`/`description`/`image`.
+- Verified `pnpm build` and `pnpm lint` pass.
+- Verified generated HTML contains correct metadata for all public pages.
+- Marked SEO-001 COMPLETE.
+
+## Next required action
+
+Begin **VIS-001 — Home page visual QA and responsive fixes**.

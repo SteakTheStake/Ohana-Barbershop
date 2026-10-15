@@ -37,13 +37,13 @@ The deliverable is a beautiful, functional, production-quality small-business we
 
 # CURRENT EXECUTION STATE
 
-Current phase: PHASE 1 — Foundation  
-Current task ID: CFG-001  
+Current phase: PHASE 2 — Public page polish  
+Current task ID: SEO-001  
 Task status: COMPLETE  
-Last successful verification: 2026-10-14 — `pnpm build` and `pnpm lint` pass; static export to `apps/web/out/` verified; all routes return HTTP 200.  
+Last successful verification: 2026-10-14 — `pnpm build` and `pnpm lint` pass; every public page has a unique `<title>` and `<meta name="description">`; Open Graph tags verified in output HTML.  
 Known blockers: None.  
-Files relevant to current task: `apps/web/next.config.ts`, `apps/web/src/app/sitemap.ts`, `apps/web/src/app/book/page.tsx`, `apps/web/src/app/book/book-client.tsx`  
-Next required action: Begin **SEO-001 — Add page-specific metadata and descriptions**.
+Files relevant to current task: `apps/web/src/app/layout.tsx`, `apps/web/src/app/page.tsx`, `apps/web/src/app/services/page.tsx`, `apps/web/src/app/book/page.tsx`, `apps/web/src/app/about/page.tsx`, `apps/web/src/app/contact/page.tsx`, `apps/web/src/app/shop/page.tsx`  
+Next required action: Begin **VIS-001 — Home page visual QA and responsive fixes**.
 
 ---
 
@@ -314,7 +314,7 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 
 **Priority:** High.
 
-**Status:** NOT STARTED.
+**Status:** COMPLETE.
 
 **Dependencies:** CFG-001.
 

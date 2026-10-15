@@ -1,8 +1,19 @@
 import { BookButton } from "@/components/chrome";
 import { SectionTitle } from "@/components/patterns";
 import { ServiceList } from "@/components/service-list";
+import type { Metadata } from "next";
 
-export const metadata = { title: "Services & Prices" };
+export const metadata: Metadata = {
+  title: "Services & Prices",
+  description:
+    "Full service menu and prices for Ohana Barbershop in Albany, OR. Haircuts, skin fades, buzz cuts, keiki kutz, and beard trims.",
+  openGraph: {
+    title: "Services & Prices | Ohana Barbershop",
+    description:
+      "Full service menu and prices for Ohana Barbershop in Albany, OR. Haircuts, skin fades, buzz cuts, keiki kutz, and beard trims.",
+    images: ["/logo.webp"],
+  },
+};
 
 export default function Services() {
   return (

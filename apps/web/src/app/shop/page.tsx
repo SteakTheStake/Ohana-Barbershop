@@ -1,7 +1,18 @@
 import { NihoBand, SectionTitle } from "@/components/patterns";
 import { site } from "@/lib/site";
+import type { Metadata } from "next";
 
-export const metadata = { title: "Shop" };
+export const metadata: Metadata = {
+  title: "Shop",
+  description:
+    "Ohana Barbershop apparel and merchandise coming soon. Follow us on Instagram for the latest drop from Albany, OR.",
+  openGraph: {
+    title: "Shop | Ohana Barbershop",
+    description:
+      "Ohana Barbershop apparel and merchandise coming soon. Follow us on Instagram for the latest drop from Albany, OR.",
+    images: ["/logo.webp"],
+  },
+};
 
 export default function Shop() {
   return (

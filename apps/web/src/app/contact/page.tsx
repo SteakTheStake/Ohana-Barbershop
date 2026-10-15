@@ -1,8 +1,19 @@
 import { Icon } from "@/components/icon";
 import { SectionTitle } from "@/components/patterns";
 import { site } from "@/lib/site";
+import type { Metadata } from "next";
 
-export const metadata = { title: "Contact" };
+export const metadata: Metadata = {
+  title: "Contact",
+  description:
+    "Call, text, or email Ohana Barbershop in Albany, OR. Find hours, location, and social links for Spencer's island-style barbershop.",
+  openGraph: {
+    title: "Contact | Ohana Barbershop",
+    description:
+      "Call, text, or email Ohana Barbershop in Albany, OR. Find hours, location, and social links for Spencer's island-style barbershop.",
+    images: ["/logo.webp"],
+  },
+};
 
 const actions = [
   { label: "Call", value: site.phone, href: site.phoneHref },
