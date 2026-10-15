@@ -1,20 +1,21 @@
-import { AcuityEmbed } from "@/components/acuity-embed";
-import { SectionTitle } from "@/components/patterns";
-import { services, site } from "@/lib/site";
+import { Suspense } from "react";
+import { BookClient } from "./book-client";
 
 export const metadata = { title: "Book" };
 
-export default async function Book({ searchParams }: { searchParams: Promise<{ service?: string }> }) {
-  const { service } = await searchParams;
-  const selected = services.find((s) => s.slug === service);
+export default function Book() {
+  return (
+    <Suspense fallback={<BookSkeleton />}>
+      <BookClient />
+    </Suspense>
+  );
+}
 
+function BookSkeleton() {
   return (
     <section className="mx-auto max-w-4xl px-5 pt-16">
-      <SectionTitle kicker="Schedule" title={selected ? `Book · ${selected.name}` : "Book Now"} />
-      <AcuityEmbed typeId={selected?.acuityTypeId} />
-      <p className="text-sand mt-4 text-sm">
-        Trouble booking? Call <a href={site.phoneHref} className="text-reef">{site.phone}</a>
-      </p>
+      <div className="bg-coal h-8 w-48 animate-pulse rounded" />
+      <div className="bg-bone mt-10 h-[1100px] w-full rounded-xl" />
     </section>
   );
 }

@@ -37,13 +37,13 @@ The deliverable is a beautiful, functional, production-quality small-business we
 
 # CURRENT EXECUTION STATE
 
-Current phase: PHASE 0 — Discovery and specification  
-Current task ID: PLAN-001  
+Current phase: PHASE 1 — Foundation  
+Current task ID: CFG-001  
 Task status: COMPLETE  
-Last successful verification: 2026-10-14 — `pnpm build` and `pnpm lint` pass; all 7 static routes generated.  
+Last successful verification: 2026-10-14 — `pnpm build` and `pnpm lint` pass; static export to `apps/web/out/` verified; all routes return HTTP 200.  
 Known blockers: None.  
-Files relevant to current task: `docs/*.md`, `apps/web/**/*`, `PLAN.md`, `scraped/site-content.md`  
-Next required action: Begin **CFG-001 — Configure static export and production build**.
+Files relevant to current task: `apps/web/next.config.ts`, `apps/web/src/app/sitemap.ts`, `apps/web/src/app/book/page.tsx`, `apps/web/src/app/book/book-client.tsx`  
+Next required action: Begin **SEO-001 — Add page-specific metadata and descriptions**.
 
 ---
 
@@ -271,7 +271,7 @@ Lighthouse optimization, final visual review, production deployment, and post-de
 
 **Priority:** Critical.
 
-**Status:** NOT STARTED.
+**Status:** COMPLETE.
 
 **Dependencies:** PLAN-001.
 

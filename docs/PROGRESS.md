@@ -5,7 +5,7 @@
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
 | PLAN-001 | Audit repository and create implementation plan | COMPLETE | Docs created; build/lint pass. |
-| CFG-001 | Configure static export and production build | NOT STARTED | Next executable task after PLAN-001. |
+| CFG-001 | Configure static export and production build | COMPLETE | Static export to `out/` verified; all routes 200. |
 | SEO-001 | Add page-specific metadata and descriptions | NOT STARTED | |
 | VIS-001 | Home page visual QA and responsive fixes | NOT STARTED | |
 | VIS-002 | Services page visual QA | NOT STARTED | |
@@ -39,6 +39,16 @@
 - Updated `docs/PROGRESS.md`.
 - Marked PLAN-001 COMPLETE after `pnpm build` and `pnpm lint` passed.
 
+### 2026-10-14 — CFG-001 complete
+
+- Configured `output: "export"` and `images: { unoptimized: true }` in `apps/web/next.config.ts`.
+- Added `export const dynamic = "force-static"` to `apps/web/src/app/sitemap.ts`.
+- Refactored `/book` to use a client component with `useSearchParams` wrapped in `Suspense` for static export compatibility.
+- Verified `pnpm build` and `pnpm lint` pass.
+- Verified static output contains `index.html`, `services.html`, `book.html`, `about.html`, `contact.html`, `shop.html`, `sitemap.xml`, and `404.html`.
+- Verified all routes return HTTP 200 when served from `apps/web/out/`.
+- Marked CFG-001 COMPLETE.
+
 ## Known blockers
 
 - **Business hours:** Need owner confirmation before populating `site.hours`.
@@ -50,4 +60,4 @@
 
 ## Next required action
 
-Complete PLAN-001 verification and mark it COMPLETE. The next executable implementation task is **CFG-001 — Configure static export and production build**.
+Begin **SEO-001 — Add page-specific metadata and descriptions**.
