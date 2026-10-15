@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { BookButton } from "@/components/chrome";
 import { Greeting } from "@/components/greeting";
@@ -57,7 +56,11 @@ export default function Home() {
           </div>
           <div className="relative mx-auto w-64 md:w-80">
             {/* <Icon name="turtle" className="bg-current text-reef/10 absolute -inset-12 h-[calc(100%+6rem)] w-[calc(100%+6rem)]" /> */}
-            <Image src="/logo-hero.webp" alt="Ohana Barbershop logo" width={640} height={849} className="logo-dark relative" priority fetchPriority="high" />
+            <link rel="preload" as="image" href="/logo-hero.avif" type="image/avif" fetchPriority="high" />
+            <picture>
+              <source srcSet="/logo-hero.avif" type="image/avif" />
+              <img src="/logo-hero.webp" alt="Ohana Barbershop logo" width={590} height={796} className="logo-dark relative" fetchPriority="high" decoding="async" />
+            </picture>
           </div>
         </div>
         <WaveDivider className="text-reef/40" />

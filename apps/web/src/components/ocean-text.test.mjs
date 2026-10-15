@@ -36,7 +36,14 @@ function mount({ reduced = false, webgl = true } = {}) {
       throw new Error(name);
     },
     document: { createElement: () => ({ getContext: () => canvas2d }), fonts: { ready: fonts.promise } },
-    window: { devicePixelRatio: 1, matchMedia: () => ({ matches: reduced }) },
+    window: {
+      devicePixelRatio: 1,
+      matchMedia: () => ({ matches: reduced }),
+      requestIdleCallback: cb => (cb(), 1),
+      cancelIdleCallback() {},
+      setTimeout: cb => (cb(), 1),
+      clearTimeout() {},
+    },
     getComputedStyle: () => ({ fontSize: "72px", fontWeight: "400", fontFamily: "Bebas Neue", letterSpacing: "1px" }),
     performance: { now: () => 0 },
     requestAnimationFrame(cb) {

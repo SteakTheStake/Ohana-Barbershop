@@ -32,6 +32,22 @@ export function OceanText({ children }: { children: string }) {
   useEffect(() => {
     const el = wrap.current!;
     const canvas = cvs.current!;
+    let teardown: (() => void) | undefined;
+    let disposed = false;
+    const start = () => {
+      if (!disposed) teardown = init(el, canvas, children);
+    };
+    const idle = window.requestIdleCallback?.(start);
+    const timer = idle === undefined ? window.setTimeout(start, 60) : undefined;
+    return () => {
+      disposed = true;
+      if (idle !== undefined) window.cancelIdleCallback?.(idle);
+      if (timer !== undefined) window.clearTimeout(timer);
+      teardown?.();
+    };
+  }, [children]);
+
+  function init(el: HTMLSpanElement, canvas: HTMLCanvasElement, children: string) {
     const gl = canvas.getContext("webgl", { premultipliedAlpha: true, alpha: true });
     if (!gl) return;
     el.dataset.gl = "1";
@@ -127,7 +143,7 @@ export function OceanText({ children }: { children: string }) {
       io.disconnect();
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
-  }, [children]);
+  }
 
   return (
     <span ref={wrap} className="ocean-text relative inline-block">
