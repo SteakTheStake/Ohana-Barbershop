@@ -1,16 +1,9 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTypeScript from "eslint-config-next/typescript";
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...nextVitals,
+  ...nextTypeScript,
   {
     ignores: [
       "node_modules/**",
@@ -19,7 +12,18 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      "src/payload-types.ts",
+      "src/migrations/**",
     ],
+  },
+  {
+    // Loading flags and cleared selections are intentional when fetch inputs change.
+    rules: { "react-hooks/set-state-in-effect": "off" },
+  },
+  {
+    // The existing WebGL initializer is a hoisted function, not a mutable value.
+    files: ["src/components/ocean-text.tsx"],
+    rules: { "react-hooks/immutability": "off" },
   },
 ];
 

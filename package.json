@@ -4,6 +4,11 @@
   "scripts": {
     "dev": "pnpm -C apps/web dev",
     "build": "pnpm -C apps/web build",
-    "lint": "pnpm -C apps/web lint"
+    "lint": "pnpm -C apps/web lint",
+    "setup:local": "pnpm -C apps/web setup:local",
+    "test": "pnpm -C apps/web test",
+    "typecheck": "pnpm -C apps/web typecheck",
+    "calendar:sync": "pnpm -C apps/web calendar:sync",
+    "calendar:health": "pnpm -C apps/web calendar:health"
   }
 }

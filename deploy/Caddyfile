@@ -1,0 +1,31 @@
+(app) {
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+	}
+	reverse_proxy app:3000 {
+		# Never pass through a caller-supplied client IP.
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto https
+	}
+}
+
+www.ohana-barbershop.com {
+	@owner path /owner /owner/* /admin /admin/*
+	redir @owner https://www.owner.ohana-barbershop.com{uri} 302
+	# Public booking uses only /api/ohana; keep Payload/owner APIs on the owner host.
+	@privateAPI {
+		path /api /api/*
+		not path /api/ohana/* /api/calendar/* /api/health
+	}
+	respond @privateAPI 404
+	import app
+}
+
+www.owner.ohana-barbershop.com {
+	header X-Robots-Tag "noindex, nofollow"
+	redir / /owner 302
+	import app
+}

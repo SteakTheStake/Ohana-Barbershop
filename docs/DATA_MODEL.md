@@ -1,4 +1,7 @@
-# Ohana Barbershop — Data Model
+# Ohana Barbershop - Data Model
+
+> Superseded: current schemas are in `apps/web/src/cms/`, with generated
+> `payload-types.ts` and migrations. See [OHANA_CMS.md](OHANA_CMS.md).
 
 ## Overview
 

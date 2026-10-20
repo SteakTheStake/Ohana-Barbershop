@@ -1,0 +1,15 @@
+:root {
+  --ohana-reef: #2fa59a;
+  --ohana-ember: #d9692e;
+}
+
+.login .login__brand::after {
+  content: "OHANA OWNER STUDIO";
+  display: block;
+  margin-top: 1rem;
+  color: var(--ohana-reef);
+  font-weight: 700;
+  letter-spacing: .2em;
+}
+
+.nav__group-label { color: var(--ohana-reef); }

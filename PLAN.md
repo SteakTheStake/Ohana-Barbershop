@@ -1,4 +1,8 @@
-# Ohana Barbershop — New Website & Mobile App Plan
+# Ohana Barbershop - New Website & Mobile App Plan
+
+> Current implementation: Payload CMS + native scheduling + phone verification.
+> The external-scheduler/static-only plans below are superseded.
+> See `docs/OHANA_CMS.md` for current setup, deployment, and limitations.
 
 > Goal: Replace the current Squarespace site (ohana-barbershop.com) with a modern, fast, custom
 > website plus a customer-facing mobile app focused on booking, retention, and merch.

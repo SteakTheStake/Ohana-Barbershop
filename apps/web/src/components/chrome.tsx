@@ -9,6 +9,7 @@ const nav = [
   { href: "/about", label: "About" },
   { href: "/shop", label: "Shop" },
   { href: "/contact", label: "Contact" },
+  { href: "/account", label: "My Ohana" },
 ];
 
 export function BookButton({ href = "/book", className = "" }: { href?: string; className?: string }) {
@@ -28,7 +29,7 @@ export function Header() {
       <div className="border-lava/80 bg-ink/90 shadow-ink/60 mx-auto max-w-6xl overflow-hidden rounded-xl border shadow-2xl backdrop-blur-xl">
         <div className="flex items-center justify-between gap-4 px-4 py-2 md:px-5">
           <Link href="/" className="flex items-center gap-3" aria-label={site.name}>
-            <Image src="/logo-header.webp" alt="" width={40} height={53} className="logo-dark h-11 w-auto" priority />
+            <Image src="/small-logo.png" alt="" width={44} height={44} className="h-11 w-auto" priority />
             <span className="font-display text-2xl tracking-widest">Ohana</span>
           </Link>
           <nav className="hidden items-center gap-8 md:flex">

@@ -1,4 +1,7 @@
 # OHANA BARBERSHOP
+> Current override: Payload CMS and custom scheduling are implemented.
+> The static-site/external-scheduler tasks below are historical.
+> Use [OHANA_CMS.md](OHANA_CMS.md) for current setup and deployment.
 # ENGINEERING BLUEPRINT & AGENT EXECUTION PROTOCOL
 
 **Priority:** CRITICAL  

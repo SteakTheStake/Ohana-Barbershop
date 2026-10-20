@@ -1,5 +1,106 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Verve";
+  src: url("/font/Verve.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Thesignature";
+  src: url("/font/Thesignature.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ZTNature";
+  src: url("/font/ZTNature-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ZTNature";
+  src: url("/font/ZTNature-ThinItalic.ttf") format("truetype");
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ZTNature";
+  src: url("/font/ZTNature-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ZTNature";
+  src: url("/font/ZTNature-MediumItalic.ttf") format("truetype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ZTNature";
+  src: url("/font/ZTNature-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ZTNature";
+  src: url("/font/ZTNature-BlackItalic.ttf") format("truetype");
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "VerveAlternate";
+  src: url("/font/VerveAlternate.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "VerveShadow";
+  src: url("/font/VerveShadow.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "BebasKai";
+  src: url("/font/BebasKai.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Blackout Sunrise";
+  src: url("/font/Blackout Sunrise.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Matcha Style";
+  src: url("/font/Matcha Style.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Alte Haas Grotesk Bold";
+  src: url("/font/AlteHaasGroteskBold.ttf") format("truetype");
+  font-display: swap;
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "Alte Haas Grotesk";
+  src: url("/font/AlteHaasGroteskRegular.ttf") format("truetype");
+  font-display: swap;
+  font-weight: normal;
+}
+
 @layer base {
   a:focus-visible,
   button:focus-visible {
@@ -17,11 +118,126 @@
   --color-reef: #2fa59a;
   --color-ember: #d9692e;
   --font-display: var(--font-bebas), Impact, sans-serif;
-  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-sans: "ZTNature", var(--font-inter), system-ui, sans-serif;
+  --font-ocean: "ZTNature", system-ui, sans-serif;
+  --font-shine: "Alte Haas Grotesk", system-ui, sans-serif;
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+.ohana-panel {
+  border: 1px solid var(--color-lava);
+  border-radius: 1rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: radial-gradient(ellipse at top right, rgb(47 165 154 / .08), transparent 70%), var(--color-coal);
+}
+.booking-eyebrow {
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  color: var(--color-sand);
+}
+.booking-step {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 1.1rem;
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  letter-spacing: .03em;
+}
+.booking-step > span { color: var(--color-ember); font-size: 1.2rem; }
+.booking-label { display: block; font-size: .875rem; color: var(--color-sand); }
+.booking-input {
+  display: block;
+  width: 100%;
+  margin-top: .5rem;
+  padding: .85rem 1rem;
+  border: 1px solid rgb(201 180 143 / .3);
+  border-radius: .5rem;
+  background: var(--color-ink);
+  color: var(--color-bone);
+  color-scheme: dark;
+}
+.booking-input:focus-visible { outline: 2px solid var(--color-reef); outline-offset: 2px; }
+.booking-primary, .booking-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: .4rem;
+  padding: .8rem 1.2rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  letter-spacing: .06em;
+  cursor: pointer;
+}
+.booking-primary { background: var(--color-ember); color: var(--color-ink); border: 1px solid var(--color-ember); }
+.booking-primary:hover:not(:disabled) { background: var(--color-sand); border-color: var(--color-sand); }
+.booking-secondary { border: 1px solid rgb(201 180 143 / .4); color: var(--color-bone); }
+.booking-secondary:hover:not(:disabled) { border-color: var(--color-reef); }
+button:disabled { opacity: .5; cursor: not-allowed; }
+.service-choice, .slot-choice {
+  text-align: left;
+  border: 1px solid var(--color-lava);
+  background: var(--color-coal);
+  border-radius: .7rem;
+  padding: 1.2rem;
+  cursor: pointer;
+}
+.slot-choice { padding: .75rem .5rem; font-size: .875rem; text-align: center; }
+.service-choice:hover, .slot-choice:hover { border-color: var(--color-sand); }
+.service-choice.is-selected, .slot-choice.is-selected {
+  border-color: var(--color-reef);
+  background: linear-gradient(135deg, rgb(47 165 154 / .13), transparent), var(--color-coal);
+  box-shadow: inset 0 0 0 1px var(--color-reef);
+}
+.booking-error { padding: 1rem; background: rgb(217 105 46 / .12); border: 1px solid var(--color-ember); border-radius: .5rem; color: var(--color-bone); }
+
+.day-strip {
+  display: flex;
+  gap: .5rem;
+  overflow-x: auto;
+  padding-bottom: .5rem;
+  scrollbar-width: thin;
+}
+.day-choice {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .15rem;
+  min-width: 4.75rem;
+  border: 1px solid var(--color-lava);
+  background: var(--color-coal);
+  border-radius: .7rem;
+  padding: .7rem .8rem;
+  cursor: pointer;
+}
+.day-choice__name { font-size: .7rem; text-transform: uppercase; letter-spacing: .12em; color: var(--color-sand); }
+.day-choice__date { font-size: .9rem; color: var(--color-bone); }
+.day-choice:hover { border-color: var(--color-sand); }
+.day-choice.is-selected {
+  border-color: var(--color-reef);
+  background: linear-gradient(135deg, rgb(47 165 154 / .13), transparent), var(--color-coal);
+  box-shadow: inset 0 0 0 1px var(--color-reef);
+}
+.daypart-tabs { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+.daypart-tab {
+  border: 1px solid var(--color-lava);
+  background: var(--color-coal);
+  border-radius: 999px;
+  padding: .5rem 1rem;
+  font-size: .85rem;
+  color: var(--color-bone);
+  cursor: pointer;
+}
+.daypart-tab__count { margin-left: .25rem; color: var(--color-sand); }
+.daypart-tab:hover { border-color: var(--color-sand); }
+.daypart-tab.is-selected {
+  border-color: var(--color-reef);
+  box-shadow: inset 0 0 0 1px var(--color-reef);
 }
 
 body {
@@ -37,21 +253,6 @@ body {
     linear-gradient(135deg, transparent 75%, rgb(201 180 143 / 0.05) 75%),
     linear-gradient(225deg, transparent 75%, rgb(201 180 143 / 0.05) 75%);
   background-size: 28px 28px;
-}
-
-.logo-dark {
-  filter: invert(1);
-  mix-blend-mode: screen;
-}
-
-@keyframes drift {
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-.animate-drift {
-  animation: drift 40s linear infinite;
 }
 
 /* Motif-masked section edges: footer wave hem + header niho hem */
@@ -79,8 +280,34 @@ body {
   }
 }
 
+/* Same wave hem, mirrored to the bottom edge (hero → services transition) */
+.wave-edge-bottom {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40'%3E%3Cpath d='M0 20 Q 37.5 0 75 20 T 150 20 T 225 20 T 300 20 T 375 20 T 450 20 T 525 20 T 600 20 T 675 20 T 750 20 T 825 20 T 900 20 T 975 20 T 1050 20 T 1125 20 T 1200 20' fill='none' stroke='%232fa59a' stroke-opacity='.5' stroke-width='2'/%3E%3Cpath d='M0 30 Q 37.5 10 75 30 T 150 30 T 225 30 T 300 30 T 375 30 T 450 30 T 525 30 T 600 30 T 675 30 T 750 30 T 825 30 T 900 30 T 975 30 T 1050 30 T 1125 30 T 1200 30' fill='none' stroke='%232fa59a' stroke-opacity='.2' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-position: 0 100%;
+  background-size: 1200px 40px;
+  -webkit-mask-image: linear-gradient(#000 0 0), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40'%3E%3Cpath d='M0 20 Q 37.5 0 75 20 T 150 20 T 225 20 T 300 20 T 375 20 T 450 20 T 525 20 T 600 20 T 675 20 T 750 20 T 825 20 T 900 20 T 975 20 T 1050 20 T 1125 20 T 1200 20 V0 H0 Z' fill='%23fff'/%3E%3C/svg%3E");
+  mask-image: linear-gradient(#000 0 0), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40'%3E%3Cpath d='M0 20 Q 37.5 0 75 20 T 150 20 T 225 20 T 300 20 T 375 20 T 450 20 T 525 20 T 600 20 T 675 20 T 750 20 T 825 20 T 900 20 T 975 20 T 1050 20 T 1125 20 T 1200 20 V0 H0 Z' fill='%23fff'/%3E%3C/svg%3E");
+  -webkit-mask-size: 100% calc(100% - 40px), 1200px 40px;
+  mask-size: 100% calc(100% - 40px), 1200px 40px;
+  -webkit-mask-position: 0 0, 0 100%;
+  mask-position: 0 0, 0 100%;
+  -webkit-mask-repeat: no-repeat, repeat-x;
+  mask-repeat: no-repeat, repeat-x;
+  animation: edge-drift-bottom 40s linear infinite;
+}
+
+@keyframes edge-drift-bottom {
+  to {
+    background-position-x: -1200px;
+    -webkit-mask-position: 0 0, -1200px 100%;
+    mask-position: 0 0, -1200px 100%;
+  }
+}
+
 .ocean-text {
   white-space: nowrap;
+  font-family: var(--font-ocean);
 }
 
 .ocean-text[data-gl] {
@@ -96,6 +323,7 @@ body {
   background-clip: text;
   color: transparent;
   animation: shine 3.5s ease-in-out infinite;
+  font-family: var(--font-shine);
 }
 
 .shine-text .sparkle {
@@ -120,8 +348,8 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-drift,
   .wave-edge,
+  .wave-edge-bottom,
   .animate-pulse,
   .shine-text,
   .shine-text .sparkle {

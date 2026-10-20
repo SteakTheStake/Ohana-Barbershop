@@ -1,4 +1,7 @@
-# Ohana Barbershop — Architecture
+# Ohana Barbershop - Architecture
+
+> Superseded: the current architecture is Payload CMS + native scheduling.
+> See [OHANA_CMS.md](OHANA_CMS.md). The design below is historical.
 
 ## Overview
 

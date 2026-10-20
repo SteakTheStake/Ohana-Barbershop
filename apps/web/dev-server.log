@@ -1,0 +1,19 @@
+npm notice run web@0.1.0 dev
+npm notice run next dev --webpack
+⚠ Port 3000 is in use by process 28960, using available port 3001 instead.
+▲ Next.js 16.3.3 (webpack)
+- Local:         http://localhost:3001
+- Network:       http://172.25.176.1:3001
+- Environments: .env.local
+✓ Ready in 954ms
+✓ Running next.config.ts took 72ms
+⨯ Another next dev server is already running.
+
+- Local:        http://localhost:3000
+- PID:          28960
+- Dir:          E:\devwork\Ohana-Barbershop\apps\web
+- Log:          .next-dev\dev\logs\next-development.log
+
+You can access the existing server at http://localhost:3000,
+or run taskkill /PID 28960 /F to stop it and start a new one.
+[?25h

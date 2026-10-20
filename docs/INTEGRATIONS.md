@@ -1,4 +1,11 @@
-# Ohana Barbershop — Integrations
+# Ohana Barbershop - Integrations
+
+> Superseded: scheduling is now native, with Payload CMS and Twilio Verify
+> for production phone login. See [OHANA_CMS.md](OHANA_CMS.md).
+>
+> Spencer uses Rosie for calls and messaging. The optional Google Calendar bridge
+> is documented in [ROSIE_INTEGRATION.md](ROSIE_INTEGRATION.md); it is disabled
+> until credentials and scheduled synchronization are configured.
 
 ## 1. Booking and scheduling — Easy!Appointments (self-hosted, open source)
 

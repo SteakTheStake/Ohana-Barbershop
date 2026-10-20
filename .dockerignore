@@ -1,0 +1,14 @@
+**/node_modules
+**/.next
+**/.next-dev
+**/out
+**/.env*
+**/*.db
+**/*.db-*
+**/*.enc
+**/*.log
+**/*.tsbuildinfo
+**/test-results
+**/playwright-report
+.git
+scraped

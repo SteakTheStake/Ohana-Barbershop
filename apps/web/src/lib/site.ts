@@ -1,6 +1,3 @@
-export const ACUITY_URL =
-  process.env.NEXT_PUBLIC_ACUITY_URL ?? "https://blueprintcatalogen.as.me/";
-
 export const site = {
   name: "Ohana Barbershop",
   tagline: "Island vibez. Clean cuts.",
@@ -25,8 +22,6 @@ export type Service = {
   hawaiian?: string;
   price: number;
   blurb: string;
-  // Acuity appointment type ID — set once types are created in Acuity
-  acuityTypeId?: number;
 };
 
 export const services: Service[] = [
@@ -36,6 +31,3 @@ export const services: Service[] = [
   { slug: "keiki", name: "Keiki Kutz", hawaiian: "Keiki", price: 25, blurb: "Kids 10 & under." },
   { slug: "beard", name: "Beard Trim", price: 20, blurb: "Hot towel. Warm lather." },
 ];
-
-export const bookingUrl = (typeId?: number) =>
-  typeId ? `${ACUITY_URL}?appointmentType=${typeId}` : ACUITY_URL;

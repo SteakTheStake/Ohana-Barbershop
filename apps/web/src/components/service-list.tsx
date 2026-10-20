@@ -1,7 +1,11 @@
 import Link from "next/link";
-import { services } from "@/lib/site";
+import { getCMS } from "@/lib/cms";
 
-export function ServiceList() {
+export async function ServiceList() {
+  const payload = await getCMS();
+  const { docs: services } = await payload.find({
+    collection: "services", where: { active: { equals: true } }, sort: "sortOrder", pagination: false,
+  });
   return (
     <ul className="divide-lava border-lava divide-y border-y">
       {services.map((s) => (
@@ -13,11 +17,10 @@ export function ServiceList() {
             <div className="flex-1">
               <p className="font-display text-3xl tracking-wide">
                 {s.name}
-                {s.hawaiian && <span className="text-sand/70 ml-3 font-sans text-sm italic">{s.hawaiian}</span>}
               </p>
-              <p className="text-sand text-sm">{s.blurb}</p>
+              <p className="text-sand text-sm">{s.description} / {s.durationMinutes} min</p>
             </div>
-            <span className="font-display text-reef text-4xl">${s.price}</span>
+            <span className="font-display text-reef text-4xl">${(s.priceCents / 100).toFixed(s.priceCents % 100 ? 2 : 0)}</span>
             <span className="text-ember font-display hidden text-lg tracking-widest opacity-0 transition-opacity group-hover:opacity-100 md:inline">
               Book →
             </span>

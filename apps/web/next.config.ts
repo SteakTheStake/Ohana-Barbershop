@@ -1,16 +1,17 @@
 import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 import type { NextConfig } from "next";
+import { withPayload } from "@payloadcms/next/withPayload";
 
-// `output: "export"` breaks `next dev` (missing manifests / 500s), so only
-// apply it to production builds. Static export still runs on `pnpm build`.
-// Dev uses a separate distDir so `next dev` and `next build` can run
-// concurrently without corrupting each other's `.next` cache.
+// Booking and the CMS need a Node runtime. Isolate dev and build caches.
 const nextConfig = (phase: string): NextConfig => ({
-  distDir: phase === PHASE_DEVELOPMENT_SERVER ? ".next-dev" : ".next",
-  output: phase === PHASE_DEVELOPMENT_SERVER ? undefined : "export",
+  distDir: phase === PHASE_DEVELOPMENT_SERVER ? process.env.OHANA_DEV_DIST_DIR ?? ".next-dev" : ".next",
+  async redirects() {
+    return [{ source: "/admin", destination: "/owner", permanent: false }];
+  },
   images: {
     unoptimized: true,
   },
 });
 
-export default nextConfig;
+const config = (phase: string) => withPayload(nextConfig(phase));
+export default config;

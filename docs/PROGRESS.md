@@ -1,4 +1,55 @@
-# Ohana Barbershop — Progress Log
+# Ohana Barbershop - Progress Log
+
+## 2026-10-20 - Owner reliability pass
+
+- Added transactional booking save receipts, safe unchanged retries and uncertain
+  save recovery for owner/customer booking creation; owner appointment edits and
+  status changes check revisions and reject stale writes.
+- Added owner-only appointment history, offline/stale warnings and print-day
+  fallback. Calendar UI clarifies delayed subscriptions and independent copies;
+  feed descriptions include completed/no-show status.
+- Added encrypted live-SQLite backup/restore/verify tooling and `/api/health`.
+- Added additive migration, generated types and reliability regression tests.
+- Deployment work still required: off-host backup scheduling/alerts, monitored
+  hosting, verified recovery drills and owner password recovery delivery.
+- Operational instructions and limitations: [RELIABILITY.md](RELIABILITY.md).
+- Verification: typecheck, lint (one existing homepage image warning), production
+  build with isolated test database/environment, 40 unit/integration tests,
+  full 36-test browser suite plus 9 targeted reliability checks across desktop,
+  phone and tablet. Backups were exercised on temporary live-WAL databases;
+  no real recovery, SMS delivery or remote backup provisioning was performed.
+
+## 2026-10-20 - Google Calendar feed for the owner
+
+- Added a private iCalendar feed at `/api/calendar/<token>` listing non-cancelled
+  visits and time off; the 256-bit token lives in the Payload KV table and can
+  be rotated, invalidating the old link.
+- Added a "Your Google Calendar" panel in Shop: copy the private link, setup
+  steps for Google Calendar (also works with Apple/Outlook), and link rotation.
+- Added per-visit "Add to Google Calendar" template links in the visit dialog.
+- Covered feed token auth, ICS contents, cancelled-visit removal, and rotation
+  in owner integration tests.
+- Note: subscription requires `APP_URL` to be publicly reachable; Google
+  refreshes subscribed calendars every few hours.
+
+## 2026-10-20 - Mobile-friendly owner workspace
+
+- Added `/owner` as the everyday starting page, also reached through `/admin`.
+- Added a daily schedule, guided booking/editing, quick breaks and multi-day time off.
+- Added customer search/editing, private notes, hours and dollar-based price editing.
+- Retained Payload authentication/access control and transactional booking locks.
+- Customer phone changes revoke old customer sessions.
+- Added owner API regression tests and phone/tablet/desktop browser workflows.
+- Non-technical operating instructions: [BARBER_GUIDE.md](BARBER_GUIDE.md).
+
+## 2026-10-20 - Payload CMS and custom scheduling
+
+- Replaced the external embed with native booking and account management.
+- Added owner CMS, services, customers, hours, time off, and appointments.
+- Added phone verification, private sessions, ownership checks, and throttling.
+- Added transactional interval locks, migrations, local setup, and regression tests.
+- Production still needs hosting, confirmed shop hours/policy, and Twilio Verify.
+- Current guide: [OHANA_CMS.md](OHANA_CMS.md). Earlier task registry is historical.
 
 ## Task registry
 

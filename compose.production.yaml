@@ -1,0 +1,52 @@
+name: ohana
+services:
+  app:
+    image: ohana-web:local
+    build:
+      context: .
+    init: true
+    restart: unless-stopped
+    env_file:
+      - /etc/ohana/production.env
+    environment:
+      NODE_ENV: production
+      APP_URL: https://www.ohana-barbershop.com
+      OWNER_APP_URL: https://www.owner.ohana-barbershop.com
+      DATABASE_URL: file:/data/ohana.db
+      SMS_PROVIDER: twilio
+      TRUST_PROXY: "true"
+    volumes:
+      - /var/lib/ohana/data:/data
+      - /var/lib/ohana/backups:/backups
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 90s
+      retries: 5
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - /var/lib/ohana/caddy-data:/data
+      - /var/lib/ohana/caddy-config:/config
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"

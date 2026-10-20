@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ohana Website & Owner Studio
 
-## Getting Started
+Next.js + [Payload CMS](https://github.com/payloadcms/payload) (MIT licensed), with
+Ohana's own scheduling and phone-verified customer accounts. No external scheduler
+or iframe is used.
 
-First, run the development server:
+From the repository root:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
+```sh
+pnpm install
+pnpm setup:local
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Use Node 22.16+ or a newer supported Node release. Open http://localhost:3000.
+Setup creates `apps/web/.env.local` without overwriting an existing file. Find
+the generated owner email/password there; secrets are not committed.
+Restart an already-running development server after setup.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `/owner`: phone/tablet-friendly owner workspace; `/admin` also starts here.
+- `/admin/collections/appointments`: optional advanced Payload administration.
+- `/book`: service, availability, phone verification, booking, confirmation.
+- `/account`: login, history, calendar download, cancellation, rescheduling.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Online booking starts **off**. Review the seeded prices and provisional
+30/45-minute durations, add working hours in Ohana Booking Settings, confirm the
+cancellation policy, then enable booking. Closed weekdays may be omitted.
+Time off blocks breaks/holidays, up to 31 days in one block.
+The scheduler currently supports one barber/chair.
 
-## Learn More
+Development verification codes appear in the login form; no SMS is sent.
+Production requires Twilio Verify and HTTPS. The CMS is free, but hosting and
+SMS delivery are not necessarily free.
 
-To learn more about Next.js, take a look at the following resources:
+```sh
+pnpm test
+pnpm lint
+pnpm typecheck
+pnpm -C apps/web payload generate:types
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+See `../../docs/OHANA_CMS.md` for deployment, migrations, security, backups,
+SMS setup, and limitations. Older project plans are historical.
+The barber's everyday guide is `../../docs/BARBER_GUIDE.md`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+For Rosie's optional Google Calendar bridge, setup credentials, scheduled sync,
+and the remaining concurrent-booking limitations, see
+`../../docs/ROSIE_INTEGRATION.md`. The bridge is disabled by default.
+Committed visits sync immediately; the Linux installer also provisions scheduled
+recovery. Shop shows readiness, retry timing and unresolved calendar conflicts.
+`pnpm calendar:health` checks the running app without sending calendar writes.
+Browser checks can use `PLAYWRIGHT_PORT=3100` when port 3000 serves an older build;
+the test server uses an isolated development cache.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+For the Linux production installer, both HTTPS domains, and an explicitly
+confirmed database reset, see `../../docs/DEPLOYMENT.md`. From a root-owned
+checkout on the Linux server: `sudo bash scripts/setup-production.sh --reset-database`.

@@ -19,28 +19,6 @@ export function NihoBand({ className = "", flip = false }: { className?: string;
   );
 }
 
-export function WaveDivider({ className = "" }: { className?: string }) {
-  return (
-    <div aria-hidden className={`overflow-hidden ${className}`}>
-      <svg className="animate-drift block h-10 w-[200%]" viewBox="0 0 1200 40" preserveAspectRatio="none">
-        <path
-          d="M0 20 Q 37.5 0 75 20 T 150 20 T 225 20 T 300 20 T 375 20 T 450 20 T 525 20 T 600 20 T 675 20 T 750 20 T 825 20 T 900 20 T 975 20 T 1050 20 T 1125 20 T 1200 20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-        <path
-          d="M0 30 Q 37.5 10 75 30 T 150 30 T 225 30 T 300 30 T 375 30 T 450 30 T 525 30 T 600 30 T 675 30 T 750 30 T 825 30 T 900 30 T 975 30 T 1050 30 T 1125 30 T 1200 30"
-          fill="none"
-          stroke="currentColor"
-          strokeOpacity="0.4"
-          strokeWidth="2"
-        />
-      </svg>
-    </div>
-  );
-}
-
 export function SectionTitle({
   kicker,
   title,

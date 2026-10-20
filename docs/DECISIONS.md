@@ -1,4 +1,14 @@
-# Ohana Barbershop — Architectural Decision Log
+# Ohana Barbershop - Architectural Decision Log
+
+## DEC-006 - Payload CMS and custom phone-verified scheduling (current)
+
+**Date:** 2026-10-20
+
+Implemented per the owner's request: MIT-licensed Payload CMS, SQLite with
+transactions, native Ohana scheduling, SMS-verified customer sessions, and a
+separate owner dashboard. This supersedes DEC-001, DEC-002, and DEC-003.
+The app now requires persistent Node hosting. See `OHANA_CMS.md`; entries below
+are historical. No external scheduler is used.
 
 ## DEC-001 — Replace Acuity Scheduling with self-hosted Easy!Appointments
 
