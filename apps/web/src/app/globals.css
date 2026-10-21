@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+.demo-banner { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 20px; padding: 12px 20px; background: #214a43; color: #f5eee1; font: 13px/1.5 Verdana, sans-serif; }
+.demo-banner a, .demo-banner button { color: #f5d59b; text-decoration: underline; cursor: pointer; }
+.demo-banner form { margin: 0; }
+
 @font-face {
   font-family: "Verve";
   src: url("/font/Verve.ttf") format("truetype");

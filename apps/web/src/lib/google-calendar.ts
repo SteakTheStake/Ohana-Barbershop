@@ -1,6 +1,7 @@
 import { createHash, createPrivateKey, createSign } from "node:crypto";
 import { DateTime } from "luxon";
 import { SHOP_TIMEZONE, type BusyRange } from "./scheduling";
+import { demoEnabled } from "./demo";
 
 const API = "https://www.googleapis.com/calendar/v3/calendars/";
 const TOKEN_URL = "https://oauth2.googleapis.com/token";
@@ -19,6 +20,7 @@ export type GoogleBusyEvent = BusyRange & { id: string; title: string };
 export type CalendarConfig = { calendarId: string; email: string; privateKey: string; namespace: string; bookingMode?: "link" | "calendar" };
 
 export function googleCalendarConfig(): CalendarConfig | null {
+  if (demoEnabled()) return null;
   const enabled = process.env.GOOGLE_CALENDAR_ENABLED;
   if (!enabled || enabled === "false") return null;
   if (enabled !== "true") throw new Error("GOOGLE_CALENDAR_ENABLED must be true or false.");

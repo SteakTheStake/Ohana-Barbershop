@@ -1,6 +1,7 @@
 import { createHash, createHmac, randomBytes, randomInt, timingSafeEqual } from "node:crypto";
 import { ValidationError, type Payload } from "payload";
 import type { NextRequest } from "next/server";
+import { demoEnabled } from "./demo";
 
 export const SESSION_COOKIE = "ohana-customer";
 export const SESSION_SECONDS = 14 * 24 * 60 * 60;
@@ -52,6 +53,7 @@ async function twilio(path: "Verifications" | "VerificationCheck", body: URLSear
 }
 
 export async function sendCode(payload: Payload, phone: string) {
+  if (demoEnabled()) throw new RequestError("Phone sign-in is disabled in this demo. Explore My Shop to try demo customers and appointments.", 503);
   const development = process.env.NODE_ENV !== "production" && process.env.SMS_PROVIDER === "console";
   if (!development && process.env.SMS_PROVIDER !== "twilio") throw new RequestError("Phone verification is unavailable. Please call the shop.", 503);
   const code = development ? String(randomInt(100000, 1000000)) : undefined;
@@ -64,6 +66,7 @@ export async function sendCode(payload: Payload, phone: string) {
 }
 
 export async function checkCode(payload: Payload, challengeId: number, code: string, name: string) {
+  if (demoEnabled()) throw new RequestError("Phone sign-in is disabled in this demo.", 503);
   const challenge = await payload.findByID({ collection: "phone-challenges", id: challengeId }).catch(() => null);
   if (!challenge || Date.parse(challenge.expiresAt) <= Date.now()) throw new RequestError("Invalid or expired verification code.");
   await rateLimit(payload, "verify-phone", challenge.phone, 5, 600);

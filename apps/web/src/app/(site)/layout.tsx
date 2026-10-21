@@ -3,6 +3,7 @@ import { Bebas_Neue, Inter } from "next/font/google";
 import { Footer, Header, MobileBookBar } from "@/components/chrome";
 import { site } from "@/lib/site";
 import { getCMS } from "@/lib/cms";
+import { DemoBanner } from "@/components/demo-banner";
 import "../globals.css";
 
 const bebas = Bebas_Neue({ weight: "400", subsets: ["latin"], variable: "--font-bebas" });
@@ -48,6 +49,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning className={`${bebas.variable} ${inter.variable}`}>
       <body className="pb-20 md:pb-0" suppressHydrationWarning>
         <Header />
+        <DemoBanner />
         <main>{children}</main>
         <Footer />
         <MobileBookBar />

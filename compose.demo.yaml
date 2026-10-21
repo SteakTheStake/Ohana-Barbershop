@@ -1,0 +1,54 @@
+name: ohana-demo
+services:
+  app:
+    image: ohana-web:demo
+    build:
+      context: .
+    init: true
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DEMO_MODE: "true"
+      DEMO_PASSWORD: spencerohana
+      PAYLOAD_SECRET: ${DEMO_PAYLOAD_SECRET:?Set a unique random DEMO_PAYLOAD_SECRET}
+      APP_URL: https://${DEMO_HOST:?Set DEMO_HOST to your old domain}
+      OWNER_APP_URL: https://${DEMO_HOST}
+      DEMO_DATABASE_URL: file:/data/ohana-demo.db
+      SMS_PROVIDER: disabled
+      GOOGLE_CALENDAR_ENABLED: "false"
+      TRUST_PROXY: "true"
+    volumes:
+      - demo-data:/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 90s
+      retries: 5
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      DEMO_HOST: ${DEMO_HOST}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile.demo:/etc/caddy/Caddyfile:ro
+      - demo-caddy-data:/data
+      - demo-caddy-config:/config
+volumes:
+  demo-data:
+  demo-caddy-data:
+  demo-caddy-config:

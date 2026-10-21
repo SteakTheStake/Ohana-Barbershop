@@ -1,5 +1,6 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { randomBytes } from "node:crypto";
 import { buildConfig } from "payload";
 import { ohanaSQLite } from "./cms/sqlite";
 import { Users, Services, Customers, ShopSettings, Occupancy } from "./cms/catalog";
@@ -10,11 +11,12 @@ import { services } from "./lib/site";
 import { migrations } from "./migrations";
 import { appOrigin, ownerOrigin } from "./lib/app-origins";
 import { googleCalendarConfig } from "./lib/google-calendar";
+import { demoDatabaseURL, demoEnabled } from "./lib/demo";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const secret = process.env.PAYLOAD_SECRET;
 if (!secret || secret.length < 32) throw new Error("Set PAYLOAD_SECRET to at least 32 random characters. Run pnpm setup:local for development.");
-if (process.env.NODE_ENV === "production" && process.env.SMS_PROVIDER !== "twilio") {
+if (process.env.NODE_ENV === "production" && !demoEnabled() && process.env.SMS_PROVIDER !== "twilio") {
   throw new Error("Production requires SMS_PROVIDER=twilio. Development phone codes are never permitted.");
 }
 const origins = [...new Set([appOrigin(), ownerOrigin()])];
@@ -42,7 +44,7 @@ export default buildConfig({
   collections: [Users, Services, Customers, Appointments, TimeOff, Occupancy, ...AuthRecords, SaveReceipts, AppointmentHistory],
   globals: [ShopSettings],
   db: ohanaSQLite({
-    client: { url: process.env.DATABASE_URL ?? "file:./ohana.db" },
+    client: { url: demoEnabled() ? demoDatabaseURL() : process.env.DATABASE_URL ?? "file:./ohana.db" },
     transactionOptions: { behavior: "immediate" },
     busyTimeout: 5000,
     wal: true,
@@ -53,12 +55,21 @@ export default buildConfig({
   onInit: async (payload) => {
     const owners = await payload.count({ collection: "users" });
     if (!owners.totalDocs) {
-      const email = process.env.CMS_ADMIN_EMAIL;
-      const password = process.env.CMS_ADMIN_PASSWORD;
+      const email = demoEnabled() ? "spencer@demo.ohana.invalid" : process.env.CMS_ADMIN_EMAIL;
+      const password = demoEnabled() ? randomBytes(32).toString("hex") : process.env.CMS_ADMIN_PASSWORD;
       if (!email || !password || password.length < 14) {
         throw new Error("First startup requires CMS_ADMIN_EMAIL and CMS_ADMIN_PASSWORD (14+ characters). Run pnpm setup:local.");
       }
-      await payload.create({ collection: "users", data: { name: "Ohana Owner", email, password } });
+      await payload.create({ collection: "users", data: { name: demoEnabled() ? "Spencer (demo)" : "Ohana Owner", email, password } });
+      if (demoEnabled()) {
+        await payload.updateGlobal({ slug: "shop-settings", data: {
+          bookingEnabled: false,
+          announcement: "Private demo only. No real appointments are booked.",
+          weeklyHours: Array.from({ length: 7 }, (_, day) => ({
+            weekday: String(day) as "0", closed: day === 0, opens: "09:00", closes: "17:00",
+          })),
+        } });
+      }
     }
     const catalog = await payload.count({ collection: "services" });
     if (!catalog.totalDocs) {

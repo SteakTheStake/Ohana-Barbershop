@@ -7,6 +7,7 @@ import { calendarLink, ownerDay, customerView, phoneNumber, recordId, saveBlock,
 import { syncGoogleCalendar } from "@/lib/google-calendar-sync";
 import { googleCalendarStatus } from "@/lib/google-calendar-state";
 import { CalendarBookingUnavailable } from "@/lib/google-calendar-errors";
+import { DEMO_COOKIE, demoEnabled, validDemoSession } from "@/lib/demo";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -36,13 +37,18 @@ async function body(request: NextRequest): Promise<Record<string, unknown>> {
 async function handle(request: NextRequest, context: Context) {
   try {
     if (request.method !== "GET" && request.headers.get("origin") !== ownerOrigin()) throw new APIError("Please open your shop in its usual browser address and try again.", 403);
+    if (demoEnabled() && !validDemoSession(request.cookies.get(DEMO_COOKIE)?.value)) {
+      return json({ error: "Enter the demo password to continue." }, 401);
+    }
     const payload = await getCMS();
-    const { user } = await payload.auth({ headers: request.headers });
+    const user = demoEnabled()
+      ? { ...(await payload.find({ collection: "users", limit: 1 })).docs[0], collection: "users" as const }
+      : (await payload.auth({ headers: request.headers })).user;
     if (!user || user.collection !== "users") return json({ error: "Please sign in to your shop." }, 401);
     const req = await createLocalReq({ user, req: { headers: request.headers } }, payload);
     const route = (await context.params).path.join("/");
     if (request.method === "GET") {
-      if (route === "session") return json({ owner: { name: user.name, email: user.email } });
+      if (route === "session") return json({ owner: { name: user.name, email: user.email }, demo: demoEnabled() });
       if (route === "calendar") return json(await calendarLink(payload));
       if (route === "calendar/google") return json(await googleCalendarStatus(payload, req));
       if (route === "appointments/history") {

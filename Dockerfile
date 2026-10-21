@@ -20,6 +20,7 @@ WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1
 RUN npm install --global pnpm@12.10.1
 COPY --from=build --chown=node:node /app /app
+RUN mkdir -p /data && chown node:node /data
 USER node
 WORKDIR /app/apps/web
 EXPOSE 3000

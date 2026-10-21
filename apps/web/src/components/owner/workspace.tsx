@@ -18,6 +18,7 @@ type Panel = { kind: "visit"; visit?: OwnerVisit; customer?: OwnerCustomer } | {
 export function OwnerWorkspace() {
   const [owner, setOwner] = useState<{ name: string; email: string } | null>(null);
   const [checking, setChecking] = useState(true);
+  const [demo, setDemo] = useState(false);
   const [view, setView] = useState<"schedule" | "customers" | "shop">("schedule");
   const [date, setDate] = useState(ownerToday);
   const [data, setData] = useState<OwnerDay | null>(null);
@@ -44,14 +45,16 @@ export function OwnerWorkspace() {
   }, []);
   const authError = useCallback((error: unknown) => {
     if (error instanceof OwnerSessionExpired) {
+      if (demo) { window.location.assign("/demo?next=%2Fowner"); return; }
       setOwner(null); setData(null); setPanel(null); setDirty(false); setShopDirty(false);
       setMessage(error.message);
     }
-  }, []);
+  }, [demo]);
   const checkSession = useCallback(async () => {
     setChecking(true); setError("");
     try {
-      const result = await ownerAPI<{ owner: { name: string; email: string } }>("session");
+      const result = await ownerAPI<{ owner: { name: string; email: string }; demo?: boolean }>("session");
+      setDemo(result.demo === true);
       setOwner(result.owner); setMessage("");
     } catch (e) {
       if (!(e instanceof OwnerSessionExpired)) setError("We couldn't connect to your shop. Check your connection and try again.");
@@ -59,7 +62,7 @@ export function OwnerWorkspace() {
   }, []);
   useEffect(() => { void checkSession(); }, [checkSession]);
   useEffect(() => {
-    if (!owner) return;
+    if (!owner || demo) return;
     const timer = window.setInterval(async () => {
       if (document.visibilityState !== "visible") return;
       try {
@@ -68,7 +71,7 @@ export function OwnerWorkspace() {
       } catch { /* A temporary connection failure is handled by the next shop request. */ }
     }, 45 * 60_000);
     return () => window.clearInterval(timer);
-  }, [owner, authError]);
+  }, [owner, demo, authError]);
   useEffect(() => {
     if (!owner) return;
     const ctrl = new AbortController();
@@ -120,6 +123,12 @@ export function OwnerWorkspace() {
   }
   async function logout() {
     if (busy || dirty && !window.confirm("Sign out without saving this form?") || !discardShop()) return;
+    if (demo) {
+      const form = document.createElement("form");
+      form.method = "post"; form.action = "/api/demo/logout";
+      document.body.append(form); form.submit();
+      return;
+    }
     setBusy(true);
     try {
       const response = await fetch("/api/users/logout", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
@@ -132,8 +141,9 @@ export function OwnerWorkspace() {
   if (checking) return <main className="studio-loading" role="status">Opening your shop...</main>;
   if (!owner) return <><OwnerLogin onSignedIn={checkSession} message={message} />{error && <div className="studio-login-retry"><p role="alert">{error}</p><button className="studio-button secondary" onClick={checkSession}>Try connecting again</button></div>}</>;
   return <div className="studio-shell">
-    <header className="studio-header"><a href="/owner" className="studio-brand" aria-label="Ohana My Shop"><Image src="/small-logo.png" width={30} height={30} alt="" /><span>OHANA <small>MY SHOP</small></span></a><div><span className="studio-owner-name">Aloha, {owner.name}</span><button className="studio-button quiet" disabled={busy} onClick={logout}>Sign out</button></div></header>
+    <header className="studio-header"><a href="/owner" className="studio-brand" aria-label="Ohana My Shop"><Image src="/small-logo.png" width={30} height={30} alt="" /><span>OHANA <small>MY SHOP</small></span></a><div><span className="studio-owner-name">Aloha, {owner.name}</span><button className="studio-button quiet" disabled={busy} onClick={logout}>{demo ? "Lock demo" : "Sign out"}</button></div></header>
     <main className="studio-main">
+      {demo && <div className="studio-notice" role="status"><strong>Private demo / unfinished product</strong><p>Add customers and try appointments freely using fictional details. Changes are shared demo records, not real bookings. SMS and Google Calendar are disabled. <a href="/">View website</a></p></div>}
       {(!online || refreshFailed || data && now - Date.parse(data.updatedAt) > 180_000) && <div className="studio-notice" role="alert"><strong>{!online ? "You're offline." : "Your schedule may be out of date."}</strong><p>Showing the last loaded schedule. Reconnect and refresh before relying on open times. Unsaved changes are not queued offline.</p></div>}
       {message && <div className="studio-flash" role="status"><StudioIcon name="check" /><span>{message}</span><button className="studio-close" aria-label="Dismiss message" onClick={() => setMessage("")}>X</button></div>}
       {error && <div className="studio-error" role="alert">{error}<button className="studio-button quiet" disabled={loading} onClick={() => setRefresh((n) => n + 1)}>Try again</button></div>}

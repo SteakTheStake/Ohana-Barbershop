@@ -1,0 +1,12 @@
+{$DEMO_HOST} {
+	encode zstd gzip
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		X-Robots-Tag "noindex, nofollow, noarchive"
+	}
+	reverse_proxy app:3000 {
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto https
+	}
+}

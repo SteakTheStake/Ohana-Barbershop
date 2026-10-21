@@ -1,5 +1,8 @@
 # Ohana production deployment
 
+For Spencer's password-protected preview on an old domain, use [DEMO.md](DEMO.md)
+and the separate `compose.demo.yaml` instead of this production procedure.
+
 The current application is Next.js + Payload CMS + SQLite, not a static site
 or Easy!Appointments. Use one Linux server with local persistent storage.
 
@@ -97,14 +100,20 @@ does not modify email/MX records, DNS provider accounts or registrar settings.
 
 ## Updates without a reset
 
-Update the checkout and run:
+After pushing tested changes to the deployment branch, run from the server
+checkout:
 
 ```bash
-sudo bash scripts/setup-production.sh
+sudo bash scripts/redeploy.sh --production
 ```
 
+See [REDEPLOY.md](REDEPLOY.md) for Git prerequisites, safety checks, automation,
+and failure recovery. The script fetches and fast-forwards the tracking branch,
+builds before stopping the app, retains its old image, backs up, and checks HTTPS.
+Use `setup-production.sh` for initial provisioning, not routine code updates.
+
 Credentials, customer data and owner account remain unchanged; an encrypted
-pre-deploy backup is still made. Do not change `PAYLOAD_SECRET` or `BACKUP_KEY`
+pre-deploy backup is made. Do not change `PAYLOAD_SECRET` or `BACKUP_KEY`
 on routine updates. Update image versions/dependencies deliberately, test first,
 and retain the previous image and backup before upgrading. Deployments briefly
 stop the app while backing up/restarting; this is not zero-downtime deployment.
