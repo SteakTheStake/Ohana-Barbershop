@@ -10,6 +10,27 @@ The preview explains that this is an unfinished demo. A persistent notice links
 the website to My Shop. Spencer can add fictional customers, create appointments,
 edit their details/times/status, and try the existing shop controls.
 
+## Whole-site password protection
+
+The password gate is implemented in the application, not browser JavaScript or
+Nginx basic authentication. `src/proxy.ts` matches every route on both the
+website and owner hostname. Without a valid signed demo cookie, pages and
+public images redirect to `/demo`, and APIs return `401`. Client-side
+navigation and prefetch requests are gated too.
+
+Both demo Compose configurations enable this through `DEMO_MODE=true`.
+Only the password page, its login/logout endpoints, compiled JS/CSS needed
+to display it, and the minimal health endpoint remain publicly accessible.
+Demo responses are marked private and non-cacheable. Production deployments
+without demo mode keep their existing authentication; do not enable demo mode
+against a production database.
+
+`pnpm -C apps/web test:demo` covers both hostnames and forged/expired sessions.
+After building, `pnpm -C apps/web test:demo:built` checks the actual Next.js
+server, including unlock, authenticated pages/APIs, and logout. Docker runs
+this built-app check as its non-root runtime user before accepting an image.
+It uses a temporary demo database and never calls the public hostnames.
+
 ## Safety and persistence
 
 - `DEMO_MODE=true` is required. It defaults off; normal production auth is unchanged.
@@ -77,6 +98,64 @@ Do not add `--volumes` unless you deliberately intend to delete the demo data.
 The production Compose configuration never enables demo mode.
 
 ## Quick updates from Git
+
+### Existing Nginx host: summitmc.xyz
+
+This host already serves a production stack from `/opt/ohana` on port 3101.
+To replace its public routing with a separate demo, while leaving that app and
+its production data intact, use the launch/update helper from this checkout:
+
+```bash
+sudo bash scripts/launch-demo-nginx.sh
+```
+
+The helper uses `.env.demo` for the existing demo signing secret, forces the
+website origin to `https://summitmc.xyz` and the owner origin to
+`https://owner.summitmc.xyz`, and asks for confirmation before building.
+It starts only the demo app on `127.0.0.1:3102`; Caddy is not started.
+Demo data stays in the separate `ohana-demo` Docker volume, not production
+storage. Existing HTTPS certificates and the other Nginx sites are retained.
+
+It backs up the existing Ohana site configuration before switching routing,
+then checks both origin and public HTTPS, including the demo login endpoint.
+If verification fails during the switch, the previous Nginx configuration is restored.
+The production app remains running on port 3101, so a routing rollback does
+not require restarting it or modifying either database. The helper prints the
+backup location and rollback command.
+
+Each hostname requires its own demo login because the session cookies are
+host-only. The default password is `spencerohana`; the owner workspace is at
+`https://owner.summitmc.xyz/owner`.
+
+Rerun the same helper to update a healthy demo or recover a failed initial
+launch. It verifies the existing container's Compose identity and isolated data
+volume. Port 3102 may be occupied only by that demo's loopback port binding.
+It retains the previous demo image and builds first while the current app is
+still running. It then stops only the demo app and takes an integrity-checked
+SQLite backup, if a database exists, before recreating the app. Expect brief
+demo downtime. It never starts Caddy or removes volumes; a previously created,
+stopped Caddy container may remain unused.
+
+An app or database rollback is never automatic because startup may apply
+migrations. Failure output identifies the retained image and backup target.
+Restoring Nginx configuration alone does not restore the previous demo image.
+If the old routing also points to the demo on port 3102, it still needs a
+working app on that port. Inspect the failure and use a matching image/database
+backup for manual recovery; do not blindly start an older image.
+
+The existing `redeploy.sh --demo`
+assumes standalone Caddy and must **not** be used for this Nginx demo.
+The Nginx helper rebuilds this checkout; it does not fetch or change Git.
+Do not rerun production setup while these hosts should
+serve the demo, because it manages their production Nginx routing.
+
+Validate the new configuration without Docker daemon access or network calls:
+
+```bash
+node --test scripts/demo-nginx.test.mjs scripts/demo-nginx-update.test.mjs scripts/runtime-dependencies.test.mjs
+```
+
+### Standalone Caddy demo
 
 After pushing changes, the web administrator can SSH into the server and run:
 

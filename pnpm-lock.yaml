@@ -19,6 +19,9 @@ importers:
       graphql:
         specifier: 16.13.2
         version: 16.13.2
+      libsql:
+        specifier: 0.4.7
+        version: 0.4.7
       luxon:
         specifier: 3.7.2
         version: 3.7.2

@@ -23,5 +23,8 @@ COPY --from=build --chown=node:node /app /app
 RUN mkdir -p /data && chown node:node /data
 USER node
 WORKDIR /app/apps/web
+# Payload externalizes this driver; verify app-level resolution in the final image.
+RUN node -e "const Database = require('libsql'); const db = new Database(':memory:'); db.prepare('SELECT 1').get(); db.close();"
+RUN node scripts/demo-smoke.mjs
 EXPOSE 3000
 CMD ["node", "node_modules/next/dist/bin/next", "start", "--hostname", "0.0.0.0"]
