@@ -52,10 +52,16 @@ try {
   }
   assert.ok(ready, "Built demo did not become healthy");
   for (const host of ["summitmc.xyz", "owner.summitmc.xyz"]) {
-    for (const route of ["/", "/about", "/shop", "/book", "/owner", "/large-logo.png"]) {
+    for (const route of ["/", "/about", "/shop", "/book", "/book?preview=1", "/owner", "/large-logo.png"]) {
       const response = await request(host, route);
       assert.equal(response.status, 307, `${host}${route} must require the demo password`);
-      assert.equal(new URL(response.headers.get("location")).pathname, "/demo");
+      const location = response.headers.get("location");
+      assert.ok(location, `${host}${route} must include a redirect location`);
+      // Next.js can serialize same-origin proxy redirects as relative URLs.
+      const destination = new URL(location, `http://${host}${route}`);
+      assert.equal(destination.origin, `http://${host}`);
+      assert.equal(destination.pathname, "/demo");
+      assert.equal(destination.searchParams.get("next"), route);
       assert.match(response.headers.get("cache-control"), /no-store/);
       await response.arrayBuffer();
     }
