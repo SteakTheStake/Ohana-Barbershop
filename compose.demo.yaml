@@ -9,7 +9,7 @@ services:
     environment:
       NODE_ENV: production
       DEMO_MODE: "true"
-      DEMO_PASSWORD: spencerohana
+      DEMO_PASSWORD: ohana26
       PAYLOAD_SECRET: ${DEMO_PAYLOAD_SECRET:?Set a unique random DEMO_PAYLOAD_SECRET}
       APP_URL: https://${DEMO_HOST:?Set DEMO_HOST to your old domain}
       OWNER_APP_URL: https://${DEMO_HOST}

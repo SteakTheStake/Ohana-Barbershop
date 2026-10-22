@@ -1,7 +1,7 @@
 # Spencer's private demo
 
 This is an opt-in demo deployment, not a production authentication shortcut.
-Visitors enter **spencerohana** on the private-preview page. Access lasts 12
+Visitors enter **ohana26** on the private-preview page. Access lasts 12
 hours in that browser, including My Shop at `/owner` (`/admin` also leads there).
 My Shop needs no email, password, SMS, or production owner account in demo mode.
 Use **Lock demo** to require the password again.
@@ -61,7 +61,7 @@ Do not use the production setup/reset script for a demonstration.
 Verify in a private browser:
 
 1. Open `https://YOUR_DEMO_HOST/owner` and confirm the demo/password notice appears.
-2. Try an incorrect password, then `spencerohana`; confirm My Shop opens without another login.
+2. Try an incorrect password, then `ohana26`; confirm My Shop opens without another login.
 3. Add a fictional customer; book a future cut during sample opening hours,
    then edit its notes/time and confirm the changes remain after refreshing.
 4. Visit the website, follow **Explore My Shop**, and try **Lock demo**.

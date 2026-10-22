@@ -14,7 +14,7 @@ test("production-built demo gates pages/APIs and edits isolated appointments wit
   const temp = await mkdtemp(path.join(os.tmpdir(), "ohana-demo-test-"));
   const productionFile = path.join(temp, "production-must-not-exist.db");
   Object.assign(process.env, {
-    NODE_ENV: "production", DEMO_MODE: "true", DEMO_PASSWORD: "spencerohana",
+    NODE_ENV: "production", DEMO_MODE: "true", DEMO_PASSWORD: "ohana26",
     DEMO_DATABASE_URL: `file:${path.join(temp, "ohana-demo.db").replace(/\\/g, "/")}`,
     DATABASE_URL: `file:${productionFile.replace(/\\/g, "/")}`,
     PAYLOAD_SECRET: randomBytes(48).toString("hex"),
@@ -92,11 +92,11 @@ test("production-built demo gates pages/APIs and edits isolated appointments wit
       method: "POST", headers: { origin, "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({ password, next: "/owner" }).toString(),
     });
-    assert.equal((await unlock(loginRequest("spencerohana", "https://evil.example"))).status, 403);
+    assert.equal((await unlock(loginRequest("ohana26", "https://evil.example"))).status, 403);
     const wrong = await unlock(loginRequest("wrong"));
     assert.match(wrong.headers.get("location")!, /error=password/);
     assert.equal(wrong.cookies.get(DEMO_COOKIE), undefined);
-    const accepted = await unlock(loginRequest("spencerohana"));
+    const accepted = await unlock(loginRequest("ohana26"));
     assert.equal(accepted.status, 303);
     assert.equal(new URL(accepted.headers.get("location")!).pathname, "/owner");
     assert.ok(accepted.cookies.get(DEMO_COOKIE)?.value);
@@ -105,10 +105,10 @@ test("production-built demo gates pages/APIs and edits isolated appointments wit
     const locked = await lock(new NextRequest(`${process.env.APP_URL}/api/demo/logout`, { method: "POST", headers: { origin: process.env.APP_URL! } }));
     assert.equal(locked.cookies.get(DEMO_COOKIE)?.value, "");
     for (let i = 0; i < 8; i++) await unlock(loginRequest("wrong"));
-    assert.match((await unlock(loginRequest("spencerohana"))).headers.get("location")!, /error=limited/);
+    assert.match((await unlock(loginRequest("ohana26"))).headers.get("location")!, /error=limited/);
     process.env.DEMO_MODE = "false";
     assert.equal((await request("session")).status, 401, "demo cookie must not bypass real owner auth");
-    assert.equal((await unlock(loginRequest("spencerohana"))).status, 404);
+    assert.equal((await unlock(loginRequest("ohana26"))).status, 404);
   } finally {
     const client = (payload.db as unknown as SQLiteAdapter).client;
     await payload.destroy();

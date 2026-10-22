@@ -17,7 +17,7 @@ function equal(actual: string, expected: string) {
 }
 
 export function demoPasswordMatches(password: string) {
-  return demoEnabled() && equal(password, process.env.DEMO_PASSWORD ?? "spencerohana");
+  return demoEnabled() && equal(password, process.env.DEMO_PASSWORD ?? "ohana26");
 }
 
 export function createDemoSession(now = Date.now()) {

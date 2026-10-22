@@ -8,8 +8,8 @@ test("demo password, signed sessions, opt-in behavior and database isolation", (
     process.env.DEMO_MODE = "true";
     process.env.PAYLOAD_SECRET = "test-secret-that-is-at-least-thirty-two-characters";
     delete process.env.DEMO_PASSWORD;
-    assert.equal(demoPasswordMatches("spencerohana"), true);
-    assert.equal(demoPasswordMatches("Spencerohana"), false);
+    assert.equal(demoPasswordMatches("ohana26"), true);
+    assert.equal(demoPasswordMatches("Ohana26"), false);
     assert.equal(demoPasswordMatches(""), false);
     const now = 1_800_000_000_000;
     const token = createDemoSession(now);
@@ -23,12 +23,12 @@ test("demo password, signed sessions, opt-in behavior and database isolation", (
     assert.equal(validDemoSession(token, now), false);
     process.env.DEMO_MODE = "false";
     assert.equal(validDemoSession(createDemoSession(now), now), false);
-    assert.equal(demoPasswordMatches("spencerohana"), false);
+    assert.equal(demoPasswordMatches("ohana26"), false);
     delete process.env.DEMO_MODE;
-    assert.equal(demoPasswordMatches("spencerohana"), false);
+    assert.equal(demoPasswordMatches("ohana26"), false);
     process.env.DEMO_MODE = "true";
     process.env.DEMO_PASSWORD = "custom-preview-password";
-    assert.equal(demoPasswordMatches("spencerohana"), false);
+    assert.equal(demoPasswordMatches("ohana26"), false);
     assert.equal(demoPasswordMatches("custom-preview-password"), true);
     process.env.DATABASE_URL = "file:/production/ohana.db";
     delete process.env.DEMO_DATABASE_URL;
