@@ -1,0 +1,8 @@
+services:
+  app:
+    environment:
+      OWNER_APP_URL: https://${DEMO_OWNER_HOST:?Set DEMO_OWNER_HOST}
+    ports:
+      - "127.0.0.1:3102:3000"
+  caddy:
+    profiles: [standalone-proxy]

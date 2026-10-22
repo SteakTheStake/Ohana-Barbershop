@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { DEMO_COOKIE, demoEnabled, validDemoSession } from "./lib/demo";
 
+// Gate all routes, including APIs, assets, and client-side navigation requests.
+export const config = { matcher: "/:path*" };
+
 export function proxy(request: NextRequest) {
   if (!demoEnabled()) return NextResponse.next();
   const path = request.nextUrl.pathname;
@@ -9,7 +12,7 @@ export function proxy(request: NextRequest) {
     path === "/api/health" || path.startsWith("/_next/static/")) {
     response = NextResponse.next();
   } else if (!validDemoSession(request.cookies.get(DEMO_COOKIE)?.value)) {
-    if (path.startsWith("/api/")) {
+    if (path === "/api" || path.startsWith("/api/")) {
       response = NextResponse.json({ error: "Enter the demo password to continue." }, { status: 401 });
     } else {
       const url = request.nextUrl.clone();
@@ -24,6 +27,7 @@ export function proxy(request: NextRequest) {
     response = NextResponse.next();
   }
   response.headers.set("Cache-Control", "private, no-store");
+  response.headers.set("Vary", "Cookie");
   response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
   return response;
 }
